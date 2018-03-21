@@ -6,9 +6,9 @@ The application will be a single-page javascript app containing a canvas which w
 
 ## MVP
 
-— Functional grid of squares with buttons to trigger animations.
-— Animations for at least two maze generation algorithms.
-— Animations for at least two maze-solving algorithms.
+- Functional grid of squares with buttons to trigger animations.
+- Animations for at least two maze generation algorithms.
+- Animations for at least two maze-solving algorithms.
 
 ## Technologies
 
