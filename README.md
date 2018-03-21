@@ -15,7 +15,7 @@ None.
 ## Implementation Timeline
 
 1 day, set up canvas, grid, cell logic
+
 2 days, implement algorithms
+
 1 day, finish implementing algorithms, do styling
-
-
