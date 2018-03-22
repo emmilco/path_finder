@@ -87,7 +87,7 @@ var Node = function () {
     this.neighbors = [[this.x + 1, this.y], [this.x - 1, this.y], [this.x, this.y + 1], [this.x, this.y - 1]];
     this.parent = parent;
     this.children = [];
-    this.filled = false;
+    this.type = null;
   }
 
   _createClass(Node, [{
@@ -176,7 +176,7 @@ var Grid = function () {
   }
 
   _createClass(Grid, [{
-    key: 'populateArray',
+    key: "populateArray",
     value: function populateArray() {
       for (var i = 0; i < this.width; i++) {
         for (var j = 0; j < this.height; j++) {
@@ -185,23 +185,37 @@ var Grid = function () {
       }
     }
   }, {
-    key: 'contains',
+    key: "contains",
     value: function contains(x, y) {
       return x >= 0 && x < this.width && y >= 0 && y < this.height;
     }
   }, {
-    key: 'isOpenAt',
+    key: "isOpenAt",
     value: function isOpenAt(x, y) {
       if (x + y === 0) return false;
       return this.contains(x, y) && !this.array[x][y].parent;
     }
   }, {
-    key: 'fillSquare',
+    key: "intersectsPath",
+    value: function intersectsPath(x, y) {
+      var close = this.array[x][y].neighbors;
+      var count = 0;
+      for (var i = 0; i < close.length; i++) {
+        var x0 = close[i][0];
+        var y0 = close[i][1];
+        if (this.contains(x0, y0) && this.array[x0][y0].type === "path") {
+          count += 1;
+        }
+      }
+      if (count > 1) return true;
+    }
+  }, {
+    key: "fillSquare",
     value: function fillSquare(node) {
       this.array[node.x][node.y] = node;
     }
   }, {
-    key: 'nodes',
+    key: "nodes",
     value: function nodes() {
       return [].concat.apply([], this.array);
     }
@@ -226,6 +240,7 @@ Object.defineProperty(exports, "__esModule", {
 function canvasDraw(node, ctx) {
   var size = 5;
   ctx.fillStyle = "#" + node.distance() * 10000;
+  if (node.type === "wall") ctx.fillStyle = 'green';
   ctx.fillRect(node.x * size, node.y * size, size, size);
 }
 
@@ -385,10 +400,6 @@ var _canvas_draw = __webpack_require__(4);
 
 var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
 
-var _shuffle_array = __webpack_require__(7);
-
-var _shuffle_array2 = _interopRequireDefault(_shuffle_array);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function bfsMazeGenerator(root, grid) {
@@ -399,23 +410,28 @@ function bfsMazeGenerator(root, grid) {
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
-    var active = candidates.shift();
+    var active = candidates.splice(Math.floor(Math.random() * candidates.length), 1)[0];
+    if (active.type) {
+      window.setTimeout(traversalStep, 0);
+    }
+    if (grid.intersectsPath(active.x, active.y)) {
+      active.type = "wall";
+    } else {
+      active.type = "path";
+      var children = active.neighbors.filter(function (neighbor) {
+        return grid.isOpenAt(neighbor[0], neighbor[1]);
+      });
+      children.forEach(function (child) {
+        var node = grid.array[child[0]][child[1]];
+        candidates.push(node);
+        node.parent = active;
+        node.filled = true;
+        active.children.push(node);
+      });
+    }
+
     grid.fillSquare(active);
     (0, _canvas_draw2.default)(active, ctx);
-    var children = active.neighbors.filter(function (neighbor) {
-      return grid.isOpenAt(neighbor[0], neighbor[1]) && !grid.array[neighbor[0]][neighbor[1]].filled;
-    });
-    if (children.length > 2) {
-      children.splice(Math.floor(Math.random() * children.length), 1);
-    }
-    children.forEach(function (child) {
-      var node = grid.array[child[0]][child[1]];
-      candidates.push(node);
-      node.parent = active;
-      node.filled = true;
-      active.children.push(node);
-    });
-    (0, _shuffle_array2.default)(candidates);
     // window.setTimeout(traversalStep, 0);
     traversalStep();
   };

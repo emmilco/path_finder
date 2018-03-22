@@ -25,6 +25,19 @@ class Grid {
     return this.contains(x,y) && !this.array[x][y].parent;
   }
 
+  intersectsPath(x, y){
+    const close = this.array[x][y].neighbors;
+    let count = 0;
+    for (var i = 0; i < close.length; i++) {
+      const x0 = close[i][0];
+      const y0 = close[i][1];
+      if (this.contains(x0,y0) && this.array[x0][y0].type === "path"){
+        count += 1;
+      }
+    }
+    if (count > 1) return true;
+  }
+
   fillSquare(node){
     this.array[node.x][node.y] = node;
   }

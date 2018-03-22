@@ -1,6 +1,7 @@
 function canvasDraw(node, ctx){
   const size = 5;
   ctx.fillStyle = `#${node.distance()*10000}`;
+  if (node.type === "wall") ctx.fillStyle = 'green';
   ctx.fillRect(node.x * size,node.y * size, size, size);
 }
 

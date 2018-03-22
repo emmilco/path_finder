@@ -11,7 +11,7 @@ class Node {
     ];
     this.parent = parent;
     this.children = [];
-    this.filled = false;
+    this.type = null;
   }
 
   distance(){
