@@ -151,11 +151,18 @@ var _dfs_maze_generator = __webpack_require__(11);
 
 var _dfs_maze_generator2 = _interopRequireDefault(_dfs_maze_generator);
 
+var _bfs_solver = __webpack_require__(12);
+
+var _bfs_solver2 = _interopRequireDefault(_bfs_solver);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-  window.grid = new _grid2.default(160, 160);
-  (0, _dfs_maze_generator2.default)([0, 0], window.grid);
+  window.grid = new _grid2.default(100, 100);
+  (0, _prims_maze_generator2.default)([0, 0], window.grid);
+  window.setTimeout(function () {
+    return (0, _bfs_solver2.default)(window.grid, "dfs");
+  }, 15000);
 });
 
 /***/ }),
@@ -257,9 +264,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 function canvasDraw(node, ctx) {
   var size = 5;
-  var hue = Math.floor((10 - node.distance()) * 120 / 10); // go from green to red
-  var saturation = Math.abs(node.distance() - 50) / 50; // fade to white as it approaches 50
-  ctx.fillStyle = "hsl(" + node.distance() * 2 + ", " + (50 + 20 * Math.sin(node.distance() / 3)) + "%, 50%)";
+  ctx.fillStyle = "hsl(\n    " + node.distance() * 2 + ",\n    " + (50 + 20 * Math.sin(node.distance() / 3)) + "%,\n    " + (50 + 10 * Math.cos(node.distance() / 3)) + "%)";
   if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size, node.y * size, size, size);
 }
@@ -426,7 +431,7 @@ function bfsMazeGenerator(root, grid) {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
-  candidates.push(new _node2.default(root, null));
+  candidates.push(grid.array[0][0]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
@@ -484,7 +489,7 @@ function primsMazeGenerator(root, grid) {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
-  candidates.push(new _node2.default(root, null));
+  candidates.push(grid.array[0][0]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
@@ -544,7 +549,7 @@ function dfsMazeGenerator(root, grid) {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
-  candidates.push(new _node2.default(root, null));
+  candidates.push(grid.array[0][0]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
@@ -575,6 +580,146 @@ function dfsMazeGenerator(root, grid) {
 }
 
 exports.default = dfsMazeGenerator;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+var _canvas_search_draw = __webpack_require__(13);
+
+var _canvas_search_draw2 = _interopRequireDefault(_canvas_search_draw);
+
+var _canvas_found_draw = __webpack_require__(14);
+
+var _canvas_found_draw2 = _interopRequireDefault(_canvas_found_draw);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function bfsSolver(grid, method) {
+  var target = [grid.height - 2, grid.width - 2];
+  var root = [0, 0];
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  var candidates = [];
+  var explored = 0;
+  candidates.push(grid.array[0][0]);
+
+  var traversalStep = function traversalStep() {
+    if (candidates.length === 0) return;
+    var active = void 0;
+    if (method === "dfs") {
+      active = candidates.pop();
+    } else {
+      active = candidates.shift();
+    }
+    explored += 1;
+    (0, _canvas_search_draw2.default)(active, ctx);
+    if (active.parent) {
+      var edge = active.edgeToParent();
+      var edgeNode = grid.array[edge[0]][edge[1]];
+      (0, _canvas_search_draw2.default)(edgeNode, ctx);
+    }
+    if (active.x === target[0] && active.y === target[1]) {
+      markPathTo(active, grid);
+      console.log(explored);
+      return;
+    }
+    active.children.forEach(function (child) {
+      candidates.push(child);
+    });
+    window.setTimeout(traversalStep, 0);
+  };
+  traversalStep();
+}
+
+function markPathTo(node, grid) {
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  (0, _canvas_found_draw2.default)(node, ctx);
+  if (node.parent) {
+    var edge = node.edgeToParent();
+    var edgeNode = grid.array[edge[0]][edge[1]];
+    (0, _canvas_found_draw2.default)(edgeNode, ctx);
+    window.setTimeout(function () {
+      return markPathTo(node.parent, grid);
+    }, 0);
+  }
+}
+
+exports.default = bfsSolver;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function canvasSearchDraw(node, ctx) {
+  var size = 5;
+  ctx.fillStyle = "white";
+  if (node.type === "wall") ctx.fillStyle = 'white';
+  ctx.fillRect(node.x * size, node.y * size, size, size);
+}
+
+// function canvasSearchDraw(node, ctx){
+//   const size = 20;
+//   ctx.rect(node.x * size,node.y * size, size, size);
+//   ctx.stroke();
+//   ctx.font="9px Georgia";
+//   ctx.textAlign="center";
+//   ctx.textBaseline = "middle";
+//   ctx.fillStyle = "#000000";
+//   const distance = node.distance();
+//   ctx.fillText(distance, size*node.x+(size/2), size*node.y+(size/2));
+// }
+
+exports.default = canvasSearchDraw;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function canvasFoundDraw(node, ctx) {
+  var size = 5;
+  ctx.fillStyle = "red";
+  if (node.type === "wall") ctx.fillStyle = 'white';
+  ctx.fillRect(node.x * size, node.y * size, size, size);
+}
+
+// function canvasFoundDraw(node, ctx){
+//   const size = 20;
+//   ctx.rect(node.x * size,node.y * size, size, size);
+//   ctx.stroke();
+//   ctx.font="9px Georgia";
+//   ctx.textAlign="center";
+//   ctx.textBaseline = "middle";
+//   ctx.fillStyle = "#000000";
+//   const distance = node.distance();
+//   ctx.fillText(distance, size*node.x+(size/2), size*node.y+(size/2));
+// }
+
+exports.default = canvasFoundDraw;
 
 /***/ })
 /******/ ]);

@@ -1,15 +1,12 @@
-function canvasDraw(node, ctx){
+function canvasFoundDraw(node, ctx){
   const size = 5;
-  ctx.fillStyle = `hsl(
-    ${node.distance()*2},
-    ${50 + 20*Math.sin(node.distance()/3)}%,
-    ${50 + 10*Math.cos(node.distance()/3)}%)`;
+  ctx.fillStyle = `red`;
   if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size,node.y * size, size, size);
 }
 
 
-// function canvasDraw(node, ctx){
+// function canvasFoundDraw(node, ctx){
 //   const size = 20;
 //   ctx.rect(node.x * size,node.y * size, size, size);
 //   ctx.stroke();
@@ -21,4 +18,4 @@ function canvasDraw(node, ctx){
 //   ctx.fillText(distance, size*node.x+(size/2), size*node.y+(size/2));
 // }
 
-export default canvasDraw;
+export default canvasFoundDraw;
