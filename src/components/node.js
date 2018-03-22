@@ -18,6 +18,7 @@ class Node {
     this.parent = parent;
     this.children = [];
     this.type = null;
+    this.value = Math.random();
   }
 
   distance(){
