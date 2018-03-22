@@ -9,28 +9,28 @@ function bfsMazeGenerator (root, grid) {
 
   const traversalStep = () => {
     if (candidates.length === 0) return;
-    const active = candidates.splice(Math.floor(Math.random()*candidates.length), 1)[0];
-    if (active.type) { window.setTimeout(traversalStep, 0); }
-    if (grid.intersectsPath(active.x, active.y)) {
-      active.type = "wall";
-    } else {
-      active.type = "path";
-      const children = active.neighbors.filter((neighbor) => {
-        return grid.isOpenAt(neighbor[0], neighbor[1]);
-      });
-      children.forEach((child) => {
-        const node = grid.array[child[0]][child[1]];
-        candidates.push(node);
-        node.parent = active;
-        node.filled = true;
-        active.children.push(node);
-      });
-    }
 
-    grid.fillSquare(active);
+    const active = candidates.splice(Math.floor(Math.random()*candidates.length), 1)[0];
+    active.type = "path";
+    if (active.parent){
+      let edge = active.edgeToParent();
+      let edgeNode = grid.array[edge[0]][edge[1]];
+      edgeNode.type = 'path';
+      edgeNode.parent = active.parent;
+      canvasDraw(edgeNode, ctx);
+    }
+    const children = active.candNeighbors.filter((neighbor) => {
+      return grid.isOpenAt(neighbor[0], neighbor[1]);
+    });
+    children.forEach((child) => {
+      const node = grid.array[child[0]][child[1]];
+      candidates.push(node);
+      node.parent = active;
+      active.children.push(node);
+    });
     canvasDraw(active, ctx);
-    // window.setTimeout(traversalStep, 0);
-    traversalStep();
+    window.setTimeout(traversalStep, 0);
+    // traversalStep();
   };
 
   traversalStep();

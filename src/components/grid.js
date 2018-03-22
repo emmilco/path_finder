@@ -26,7 +26,7 @@ class Grid {
   }
 
   intersectsPath(x, y){
-    const close = this.array[x][y].neighbors;
+    const close = this.array[x][y].candNeighbors;
     let count = 0;
     for (var i = 0; i < close.length; i++) {
       const x0 = close[i][0];
@@ -35,7 +35,7 @@ class Grid {
         count += 1;
       }
     }
-    if (count > 1) return true;
+    if (count > 2) return true;
   }
 
   fillSquare(node){

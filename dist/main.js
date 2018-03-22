@@ -85,6 +85,7 @@ var Node = function () {
     this.x = coords[0];
     this.y = coords[1];
     this.neighbors = [[this.x + 1, this.y], [this.x - 1, this.y], [this.x, this.y + 1], [this.x, this.y - 1]];
+    this.candNeighbors = [[this.x + 2, this.y], [this.x - 2, this.y], [this.x, this.y + 2], [this.x, this.y - 2]];
     this.parent = parent;
     this.children = [];
     this.type = null;
@@ -98,6 +99,14 @@ var Node = function () {
       } else {
         return 0;
       }
+    }
+  }, {
+    key: "edgeToParent",
+    value: function edgeToParent() {
+      var mean = function mean(a, b) {
+        return (a + b) / 2;
+      };
+      return [mean(this.parent.x, this.x), mean(this.parent.y, this.y)];
     }
   }]);
 
@@ -136,7 +145,7 @@ var _bfs_maze_generator2 = _interopRequireDefault(_bfs_maze_generator);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-  window.grid = new _grid2.default(80, 80);
+  window.grid = new _grid2.default(200, 200);
   (0, _bfs_maze_generator2.default)([0, 0], window.grid);
 });
 
@@ -198,7 +207,7 @@ var Grid = function () {
   }, {
     key: "intersectsPath",
     value: function intersectsPath(x, y) {
-      var close = this.array[x][y].neighbors;
+      var close = this.array[x][y].candNeighbors;
       var count = 0;
       for (var i = 0; i < close.length; i++) {
         var x0 = close[i][0];
@@ -207,7 +216,7 @@ var Grid = function () {
           count += 1;
         }
       }
-      if (count > 1) return true;
+      if (count > 2) return true;
     }
   }, {
     key: "fillSquare",
@@ -239,8 +248,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 function canvasDraw(node, ctx) {
   var size = 5;
-  ctx.fillStyle = "#" + node.distance() * 10000;
-  if (node.type === "wall") ctx.fillStyle = 'green';
+  var hue = Math.floor((10 - node.distance()) * 120 / 10); // go from green to red
+  var saturation = Math.abs(node.distance() - 50) / 50; // fade to white as it approaches 50
+  ctx.fillStyle = "hsl(" + node.distance() * 5 + ", " + (50 + 20 * Math.sin(node.distance() / 3)) + "%, 50%)";
+  if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size, node.y * size, size, size);
 }
 
@@ -410,30 +421,28 @@ function bfsMazeGenerator(root, grid) {
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
-    var active = candidates.splice(Math.floor(Math.random() * candidates.length), 1)[0];
-    if (active.type) {
-      window.setTimeout(traversalStep, 0);
-    }
-    if (grid.intersectsPath(active.x, active.y)) {
-      active.type = "wall";
-    } else {
-      active.type = "path";
-      var children = active.neighbors.filter(function (neighbor) {
-        return grid.isOpenAt(neighbor[0], neighbor[1]);
-      });
-      children.forEach(function (child) {
-        var node = grid.array[child[0]][child[1]];
-        candidates.push(node);
-        node.parent = active;
-        node.filled = true;
-        active.children.push(node);
-      });
-    }
 
-    grid.fillSquare(active);
+    var active = candidates.splice(Math.floor(Math.random() * candidates.length), 1)[0];
+    active.type = "path";
+    if (active.parent) {
+      var edge = active.edgeToParent();
+      var edgeNode = grid.array[edge[0]][edge[1]];
+      edgeNode.type = 'path';
+      edgeNode.parent = active.parent;
+      (0, _canvas_draw2.default)(edgeNode, ctx);
+    }
+    var children = active.candNeighbors.filter(function (neighbor) {
+      return grid.isOpenAt(neighbor[0], neighbor[1]);
+    });
+    children.forEach(function (child) {
+      var node = grid.array[child[0]][child[1]];
+      candidates.push(node);
+      node.parent = active;
+      active.children.push(node);
+    });
     (0, _canvas_draw2.default)(active, ctx);
-    // window.setTimeout(traversalStep, 0);
-    traversalStep();
+    window.setTimeout(traversalStep, 0);
+    // traversalStep();
   };
 
   traversalStep();

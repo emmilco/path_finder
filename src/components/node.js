@@ -9,6 +9,12 @@ class Node {
       [this.x,this.y+1],
       [this.x,this.y-1]
     ];
+    this.candNeighbors = [
+      [this.x+2,this.y],
+      [this.x-2,this.y],
+      [this.x,this.y+2],
+      [this.x,this.y-2]
+    ];
     this.parent = parent;
     this.children = [];
     this.type = null;
@@ -20,6 +26,11 @@ class Node {
     } else {
       return 0;
     }
+  }
+
+  edgeToParent(){
+    const mean = (a,b) => (a + b) / 2;
+    return [mean(this.parent.x, this.x), mean(this.parent.y, this.y)];
   }
 
 

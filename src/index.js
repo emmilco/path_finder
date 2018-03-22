@@ -5,6 +5,6 @@ import bfsRandomFlood from './generators/bfs_random_flood';
 import bfsMazeGenerator from './generators/bfs_maze_generator';
 
 document.addEventListener("DOMContentLoaded", () => {
-  window.grid = new Grid(80,80);
+  window.grid = new Grid(200,200);
   bfsMazeGenerator([0,0], window.grid);
 });
