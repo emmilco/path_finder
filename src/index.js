@@ -1,8 +1,10 @@
 import Grid from './components/grid';
 import Node from './components/node';
-import randomTraversal from './generators/random_traversal';
+import bfsFlood from './generators/bfs_flood';
+import bfsRandomFlood from './generators/bfs_random_flood';
+import bfsMazeGenerator from './generators/bfs_maze_generator';
 
 document.addEventListener("DOMContentLoaded", () => {
-  window.grid = new Grid(40,40);
-  randomTraversal([0,0], window.grid);
+  window.grid = new Grid(80,80);
+  bfsMazeGenerator([0,0], window.grid);
 });

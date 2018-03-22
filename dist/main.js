@@ -121,15 +121,23 @@ var _node = __webpack_require__(0);
 
 var _node2 = _interopRequireDefault(_node);
 
-var _random_traversal = __webpack_require__(3);
+var _bfs_flood = __webpack_require__(5);
 
-var _random_traversal2 = _interopRequireDefault(_random_traversal);
+var _bfs_flood2 = _interopRequireDefault(_bfs_flood);
+
+var _bfs_random_flood = __webpack_require__(8);
+
+var _bfs_random_flood2 = _interopRequireDefault(_bfs_random_flood);
+
+var _bfs_maze_generator = __webpack_require__(9);
+
+var _bfs_maze_generator2 = _interopRequireDefault(_bfs_maze_generator);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-  window.grid = new _grid2.default(40, 40);
-  (0, _random_traversal2.default)([0, 0], window.grid);
+  window.grid = new _grid2.default(80, 80);
+  (0, _bfs_maze_generator2.default)([0, 0], window.grid);
 });
 
 /***/ }),
@@ -205,7 +213,38 @@ var Grid = function () {
 exports.default = Grid;
 
 /***/ }),
-/* 3 */
+/* 3 */,
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function canvasDraw(node, ctx) {
+  var size = 5;
+  ctx.fillStyle = "#" + node.distance() * 10000;
+  ctx.fillRect(node.x * size, node.y * size, size, size);
+}
+
+// function canvasDraw(node, ctx){
+//   const size = 20;
+//   ctx.rect(node.x * size,node.y * size, size, size);
+//   ctx.stroke();
+//   ctx.font="9px Georgia";
+//   ctx.textAlign="center";
+//   ctx.textBaseline = "middle";
+//   ctx.fillStyle = "#000000";
+//   const distance = node.distance();
+//   ctx.fillText(distance, size*node.x+(size/2), size*node.y+(size/2));
+// }
+
+exports.default = canvasDraw;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -225,7 +264,7 @@ var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function randomTraversal(root, grid) {
+function bfsFlood(root, grid) {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
@@ -244,16 +283,17 @@ function randomTraversal(root, grid) {
         active.children.push(node);
       }
     });
-    window.setTimeout(traversalStep, 1);
+    window.setTimeout(traversalStep, 0);
   };
 
   traversalStep();
 }
 
-exports.default = randomTraversal;
+exports.default = bfsFlood;
 
 /***/ }),
-/* 4 */
+/* 6 */,
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -262,19 +302,128 @@ exports.default = randomTraversal;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-function canvasDraw(node, ctx) {
-  var size = 10;
-  ctx.rect(node.x * size, node.y * size, size, size);
-  ctx.stroke();
-  ctx.font = "6px Georgia";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = "#000000";
-  var distance = node.distance();
-  ctx.fillText(distance, size * node.x + size / 2, size * node.y + size / 2);
+var shuffleArray = function shuffleArray(array) {
+  for (var i = 0; i < array.length; i++) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var _ref = [array[j], array[i]];
+    array[i] = _ref[0];
+    array[j] = _ref[1];
+  }
+};
+
+exports.default = shuffleArray;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+var _canvas_draw = __webpack_require__(4);
+
+var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
+
+var _shuffle_array = __webpack_require__(7);
+
+var _shuffle_array2 = _interopRequireDefault(_shuffle_array);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function bfsRandomFlood(root, grid) {
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  var candidates = [];
+  candidates.push(new _node2.default(root, null));
+
+  var traversalStep = function traversalStep() {
+    if (candidates.length === 0) return;
+    var active = candidates.shift();
+    grid.fillSquare(active);
+    (0, _canvas_draw2.default)(active, ctx);
+    active.neighbors.forEach(function (child) {
+      if (grid.isOpenAt(child[0], child[1])) {
+        var node = grid.array[child[0]][child[1]];
+        candidates.push(node);
+        node.parent = active;
+        active.children.push(node);
+      }
+    });
+    (0, _shuffle_array2.default)(candidates);
+    window.setTimeout(traversalStep, 0);
+  };
+
+  traversalStep();
 }
 
-exports.default = canvasDraw;
+exports.default = bfsRandomFlood;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+var _canvas_draw = __webpack_require__(4);
+
+var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
+
+var _shuffle_array = __webpack_require__(7);
+
+var _shuffle_array2 = _interopRequireDefault(_shuffle_array);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function bfsMazeGenerator(root, grid) {
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  var candidates = [];
+  candidates.push(new _node2.default(root, null));
+
+  var traversalStep = function traversalStep() {
+    if (candidates.length === 0) return;
+    var active = candidates.shift();
+    grid.fillSquare(active);
+    (0, _canvas_draw2.default)(active, ctx);
+    var children = active.neighbors.filter(function (neighbor) {
+      return grid.isOpenAt(neighbor[0], neighbor[1]) && !grid.array[neighbor[0]][neighbor[1]].filled;
+    });
+    if (children.length > 2) {
+      children.splice(Math.floor(Math.random() * children.length), 1);
+    }
+    children.forEach(function (child) {
+      var node = grid.array[child[0]][child[1]];
+      candidates.push(node);
+      node.parent = active;
+      node.filled = true;
+      active.children.push(node);
+    });
+    (0, _shuffle_array2.default)(candidates);
+    // window.setTimeout(traversalStep, 0);
+    traversalStep();
+  };
+
+  traversalStep();
+}
+
+exports.default = bfsMazeGenerator;
 
 /***/ })
 /******/ ]);

@@ -1,7 +1,7 @@
 import Node from '../components/node';
 import canvasDraw from '../util/canvas_draw';
 
-function randomTraversal (root, grid) {
+function bfsFlood (root, grid) {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   const candidates = [];
@@ -20,10 +20,10 @@ function randomTraversal (root, grid) {
         active.children.push(node);
       }
     });
-    window.setTimeout(traversalStep, 1);
+    window.setTimeout(traversalStep, 0);
   };
 
   traversalStep();
 }
 
-export  default randomTraversal;
+export  default bfsFlood;
