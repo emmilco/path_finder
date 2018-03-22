@@ -2,7 +2,7 @@ function canvasDraw(node, ctx){
   const size = 5;
   var hue = Math.floor((10 - node.distance()) * 120 / 10);  // go from green to red
   var saturation = Math.abs(node.distance() - 50)/50;   // fade to white as it approaches 50
-  ctx.fillStyle = `hsl(${node.distance()*5}, ${50 + 20*Math.sin(node.distance()/3)}%, 50%)`;
+  ctx.fillStyle = `hsl(${node.distance()*2}, ${50 + 20*Math.sin(node.distance()/3)}%, 50%)`;
   if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size,node.y * size, size, size);
 }
