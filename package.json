@@ -19,7 +19,7 @@
   "homepage": "https://github.com/emmilco/path_finder#readme",
   "dependencies": {
     "d3": "^4.13.0",
-    "webpack": "^4.2.0",
+    "webpack": "^3.11.0",
     "webpack-cli": "^2.0.12"
   }
 }
