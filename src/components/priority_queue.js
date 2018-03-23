@@ -1,6 +1,6 @@
 // NOTE: This is a MIN heap priority queue.
 
-class priorityQueue {
+class PriorityQueue {
   constructor(comparator){
     this.size = 0;
     this.heap = [null];
@@ -16,7 +16,7 @@ class priorityQueue {
     this.swim(++this.size);
   }
 
-  removeMax(key){
+  removeMin(key){
     const min = this.heap[1];
     this.exchange(1, this.size);
     this.heap.pop();
@@ -55,3 +55,5 @@ class priorityQueue {
     }
   }
 }
+
+export default PriorityQueue;
