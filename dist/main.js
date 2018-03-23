@@ -156,13 +156,18 @@ var _bfs_solver = __webpack_require__(12);
 
 var _bfs_solver2 = _interopRequireDefault(_bfs_solver);
 
+var _a_star_solver = __webpack_require__(15);
+
+var _a_star_solver2 = _interopRequireDefault(_a_star_solver);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
   window.grid = new _grid2.default(100, 100);
   (0, _prims_maze_generator2.default)([0, 0], window.grid);
+  // window.setTimeout(() => bfsSolver(window.grid, "dfs"), 15000);
   window.setTimeout(function () {
-    return (0, _bfs_solver2.default)(window.grid, "dfs");
+    return new _a_star_solver2.default([0, 0], window.grid).search();
   }, 15000);
 });
 
@@ -721,6 +726,220 @@ function canvasFoundDraw(node, ctx) {
 // }
 
 exports.default = canvasFoundDraw;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _priority_queue = __webpack_require__(16);
+
+var _priority_queue2 = _interopRequireDefault(_priority_queue);
+
+var _canvas_search_draw = __webpack_require__(13);
+
+var _canvas_search_draw2 = _interopRequireDefault(_canvas_search_draw);
+
+var _canvas_found_draw = __webpack_require__(14);
+
+var _canvas_found_draw2 = _interopRequireDefault(_canvas_found_draw);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var aStarSolver = function () {
+  function aStarSolver(rootCoords, grid) {
+    var _this = this;
+
+    _classCallCheck(this, aStarSolver);
+
+    this.rootCoords = rootCoords;
+    this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
+    this.targetCoords = [grid.height - 2, grid.width - 2];
+    this.examined = {};
+    this.cameFrom = {};
+    this.candidates = new _priority_queue2.default(function (a, b) {
+      if (_this.fScore[a.coords] < _this.fScore[b.coords]) return -1;
+    });
+    this.candidates.insert(this.rootNode);
+    this.gScore = _defineProperty({}, this.rootCoords, 0);
+    this.fScore = {};
+    this.fScore[this.rootCoords] = this.heuristic(this.rootNode, this.targetCoords);
+    this.grid = grid;
+    this.explored = 0;
+  }
+
+  _createClass(aStarSolver, [{
+    key: 'heuristic',
+    value: function heuristic(current) {
+      // NOTE: returns the Manhattan distance between two nodes
+      var dx = Math.abs(current[0] - this.targetCoords[0]);
+      var dy = Math.abs(current[1] - this.targetCoords[1]);
+      return dx + dy;
+    }
+  }, {
+    key: 'search',
+    value: function search() {
+      var _this2 = this;
+
+      if (this.candidates.isEmpty()) return -1;
+      var active = this.candidates.removeMin();
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      if (active.parent) {
+        var edge = active.edgeToParent();
+        var edgeNode = this.grid.array[edge[0]][edge[1]];
+        (0, _canvas_search_draw2.default)(edgeNode, ctx);
+      }
+      (0, _canvas_search_draw2.default)(active, ctx);
+
+      if (active.coords.toString() === this.targetCoords.toString()) {
+        return this.reconstructPath(active);
+      }
+      this.examined[active.coords] = true;
+      active.children.forEach(function (child) {
+        if (!_this2.examined[child.coords]) {
+          _this2.candidates.insert(child);
+          _this2.gScore[child.coords] = Infinity;
+        } else {
+          return;
+        }
+        var tentativeGScore = _this2.gScore[active.coords] + 1;
+        if (tentativeGScore >= _this2.gScore) {
+          return;
+        }
+        _this2.cameFrom[child.coords] = active.coords;
+        _this2.gScore[child.coords] = tentativeGScore;
+        _this2.fScore[child.coords] = _this2.gScore[child.coords] + _this2.heuristic(child.coords);
+      });
+      window.setTimeout(function () {
+        return _this2.search();
+      }, 0);
+    }
+  }, {
+    key: 'reconstructPath',
+    value: function reconstructPath(node) {
+      var _this3 = this;
+
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      (0, _canvas_found_draw2.default)(node, ctx);
+      if (node.parent) {
+        var edge = node.edgeToParent();
+        var edgeNode = this.grid.array[edge[0]][edge[1]];
+        (0, _canvas_found_draw2.default)(edgeNode, ctx);
+        window.setTimeout(function () {
+          return _this3.reconstructPath(node.parent, _this3.grid);
+        }, 0);
+      }
+    }
+  }]);
+
+  return aStarSolver;
+}();
+
+exports.default = aStarSolver;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// NOTE: This is a MIN heap priority queue.
+
+var PriorityQueue = function () {
+  function PriorityQueue(comparator) {
+    _classCallCheck(this, PriorityQueue);
+
+    this.size = 0;
+    this.heap = [null];
+    this.comparator = comparator;
+  }
+
+  _createClass(PriorityQueue, [{
+    key: "isEmpty",
+    value: function isEmpty() {
+      return this.size === 0;
+    }
+  }, {
+    key: "insert",
+    value: function insert(key) {
+      this.heap.push(key);
+      this.swim(++this.size);
+    }
+  }, {
+    key: "removeMin",
+    value: function removeMin(key) {
+      var min = this.heap[1];
+      this.exchange(1, this.size);
+      this.heap.pop();
+      this.size--;
+      this.sink(1);
+      return min;
+    }
+  }, {
+    key: "less",
+    value: function less(i, j) {
+      return this.comparator(this.heap[i], this.heap[j]) === -1;
+    }
+  }, {
+    key: "exchange",
+    value: function exchange(i, j) {
+      var _ref = [this.heap[j], this.heap[i]];
+      this.heap[i] = _ref[0];
+      this.heap[j] = _ref[1];
+    }
+  }, {
+    key: "swim",
+    value: function swim(k) {
+      while (k > 1 && this.less(k, Math.floor(k / 2))) {
+        this.exchange(Math.floor(k / 2), k);
+        k = Math.floor(k / 2);
+      }
+    }
+  }, {
+    key: "sink",
+    value: function sink(k) {
+      while (2 * k <= this.size) {
+        // j is k's first child
+        var j = 2 * k;
+        // choose the lesser of k's children
+        if (j < this.size && this.less(j + 1, j)) j++;
+        // if k is not greater than its least child, k is in place
+        if (!this.less(j, k)) break;
+        // make k the child, j the parent
+        this.exchange(k, j);
+        // repeat the process with k in its new position
+        k = j;
+      }
+    }
+  }]);
+
+  return PriorityQueue;
+}();
+
+exports.default = PriorityQueue;
 
 /***/ })
 /******/ ]);

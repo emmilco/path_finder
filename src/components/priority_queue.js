@@ -43,10 +43,10 @@ class PriorityQueue {
   sink(k){
     while(2*k <= this.size){
       // j is k's first child
-      const j = 2*k;
+      let j = 2*k;
       // choose the lesser of k's children
       if (j < this.size && this.less(j+1, j)) j++;
-      // if k is not greater than its least child, break
+      // if k is not greater than its least child, k is in place
       if (!this.less(j, k)) break;
       // make k the child, j the parent
       this.exchange(k, j);
