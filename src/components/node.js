@@ -1,6 +1,7 @@
 
 class Node {
   constructor(coords, parent) {
+    this.coords = coords;
     this.x = coords[0];
     this.y = coords[1];
     this.neighbors = [
@@ -33,8 +34,6 @@ class Node {
     const mean = (a,b) => (a + b) / 2;
     return [mean(this.parent.x, this.x), mean(this.parent.y, this.y)];
   }
-
-
 }
 
 export default Node;

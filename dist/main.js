@@ -82,6 +82,7 @@ var Node = function () {
   function Node(coords, parent) {
     _classCallCheck(this, Node);
 
+    this.coords = coords;
     this.x = coords[0];
     this.y = coords[1];
     this.neighbors = [[this.x + 1, this.y], [this.x - 1, this.y], [this.x, this.y + 1], [this.x, this.y - 1]];
