@@ -1,3 +1,5 @@
+// NOTE: This is a MIN heap priority queue.
+
 class priorityQueue {
   constructor(comparator){
     this.size = 0;
@@ -15,12 +17,12 @@ class priorityQueue {
   }
 
   removeMax(key){
-    const max = this.heap[1];
+    const min = this.heap[1];
     this.exchange(1, this.size);
     this.heap.pop();
     this.size--;
     this.sink(1);
-    return max;
+    return min;
   }
 
   less(i, j){
@@ -32,7 +34,7 @@ class priorityQueue {
   }
 
   swim(k){
-    while( k > 1 && this.less(Math.floor(k/2), k)){
+    while( k > 1 && this.less(k, Math.floor(k/2))){
       this.exchange(Math.floor(k/2), k);
       k = Math.floor(k/2);
     }
@@ -42,10 +44,10 @@ class priorityQueue {
     while(2*k <= this.size){
       // j is k's first child
       const j = 2*k;
-      // choose the greater of k's children
-      if (j < this.size && this.less(j, j+1)) j++;
-      // if k is not less than its greatest child, break
-      if (!this.less(k, j)) break;
+      // choose the lesser of k's children
+      if (j < this.size && this.less(j+1, j)) j++;
+      // if k is not greater than its least child, break
+      if (!this.less(j, k)) break;
       // make k the child, j the parent
       this.exchange(k, j);
       // repeat the process with k in its new position
