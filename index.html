@@ -5,16 +5,35 @@
     <title>PathFinder: The Amazing Maze Algorithm Demonstrator!</title>
     <script src='dist/main.js'></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style media="screen">
+      canvas {
+        width: 24%;
+        margin: 0px;
+        padding: 10px;
+        height: 24%;
+      }
+      body {
+        margin: 0 auto;
+      }
+      .enclosure {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0 30px;
+      }
+    </style>
   </head>
-  <body style=" background: white;">
-      <canvas id="1" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="2" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="3" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="4" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="5" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="6" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="7" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="8" width="495px" height="495px" style="background: black; margin:20px"></canvas>
-      <canvas id="9" width="495px" height="495px" style="background: black; margin:20px"></canvas>
+  <body style=" background: black;">
+    <div class="enclosure">
+      <canvas id="1" width="495px" height="495px"></canvas>
+      <canvas id="4" width="495px" height="495px"></canvas>
+      <canvas id="7" width="495px" height="495px"></canvas>
+      <canvas id="2" width="495px" height="495px"></canvas>
+      <canvas id="5" width="495px" height="495px"></canvas>
+      <canvas id="8" width="495px" height="495px"></canvas>
+      <canvas id="3" width="495px" height="495px"></canvas>
+      <canvas id="6" width="495px" height="495px"></canvas>
+      <canvas id="9" width="495px" height="495px"></canvas>
+    </div>
   </body>
 </html>
