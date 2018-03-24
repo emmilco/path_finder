@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h1 id="making-mazes">Making Mazes</h1>
+<h2 id="perfect-and-imperfect-mazes">Perfect and Imperfect Mazes</h2>
+<p>There are two kinds of mazes. Some mazes contain loops, making it possible for explorers to visit to the same point twice without retracing their steps. Other, so called <strong>&quot;perfect&quot;</strong> mazes, contain no loops.</p>
+<p>Because they contain no loops or cyclical paths, perfect mazes have some interesting properties. For one, they can be represented as <strong>trees</strong>. Pick <em>any point</em> in a perfect maze, and every other part of the maze will be somewhere on a branch that originates at that point. (Take a second to think about that—it's pretty crazy.)</p>
+<p>Another neat thing about perfect mazes: if point A is reachable from point B, they are connected by a unique path. In other words, if you want to get from A to B in a perfect maze, there is at most one way to get there.</p>
+<h2 id="spanning-trees-and-maze-design">Spanning Trees and Maze Design</h2>
+<p>What makes a maze a maze? How would you go about building one?</p>
+<p>Mazes are designed to thwart our best intuitions about how to get from one place to another. In a well-designed maze, there is no straight path to the goal, and there are many dead ends along the way.</p>
+<p>Making a good maze requires a heavy dose of randomness. We want walls and paths to appear without any apparent order. But we do need there to be <em>some</em> order, otherwise the maze would be insoluble.</p>
+<p>One way to provide the minimum necessary connectedness to create a good maze is to build the maze as a spanning tree.</p>
+<p>A <strong>spanning tree</strong> is a kind of network. It follows two simple rules: (1) Every available point must be connected to the network, and (2) no point can be connected to itself. Total coverage, no cycles.</p>
+<p>Spanning trees can be generated in many ways. Since points in a two-dimensional plane each have four neighbors, the easiest way to generate a spanning tree is to radiate outward from the origin, connecting each point to all of its unconnected neighbors, until the whole space is full.</p>
+<p><bfs non maze></p>
+<p>This produces a pretty boring maze. How can we do better? By making the expansion <em>random</em>, of course.</p>
+<h2 id="randomized-growth">Randomized Growth</h2>
+<p>There are many ways to inject randomness into spanning tree generation. Here's the simplest way, represented as an algorithm:</p>
+<ol style="list-style-type: decimal">
+<li>Keep a list of possible path extensions, starting with just the entry point.</li>
+<li>Pick a <strong>random element</strong> out of the list.</li>
+<li>Will adding that point to the maze cause the maze to intersect itself?</li>
+<li>If not, add that point to the maze, and add all of its unvisited neighbors to the list of possible path extensions.</li>
+<li>Either way, mark that point as visited.</li>
+<li>Repeat until the list is empty.</li>
+</ol>
+<p>This approach produces mazes like the one seen below.</p>
+<p><bfs maze, b&w></p>
+<p>The maze grows evenly and organically to fill the space. Each next path extension may be randomly chosen, but all the available extensions have the same random chance of being chosen. This way of structuring our randomness produces locally unpredictable, but globally regular behavior.</p>
+<p>If we color the maze based on the path-distance of each segment from the starting point (&quot;the root&quot;), we can get a decent sense of the global structure of the maze:</p>
+<p><bfs maze, colored></p>
+<p>Notice how the color gradient shifts evenly from the top left corner (the root), outward. This tells us that there aren't any crazy backtracking paths in the maze. But what if we wanted a maze that was more chaotic?</p>
+<h2 id="weighted-randomness-prims-algorithm">Weighted Randomness &amp; Prim's Algorithm</h2>
+<p>In order to change the global structure of our maze, we need to change the way randomness is incorporated into our algorithm. In our simple randomized growth algorithm, we used random selection from the set of candidate extensions to grow the maze. Because every node has a fresh chance upon every drawing, the overall tendency is unbiased radial expansion outward from the root.</p>
+<p>We want to put the randomness into the <em>global structure</em> instead of the local path expansion. We do this by assigning every square on the grid a random weight, and then using Prim's algorithm to build our maze.</p>
+<p>Prim's algorithm is a method for building a minimum spanning tree. A minimum spanning tree is a spanning tree that's designed to choose the <em>least expensive</em> way of connecting all the tree's nodes, based on the cost of drawing any particular connection.</p>
+<p>For the most part, Prim's algorithm is identical to our earlier algorithm. We add an initial step before our old step 1,</p>
+<ol style="list-style-type: decimal">
+<li>First, assign every potential square a random numerical weight.</li>
+</ol>
+<p>and we change step 2,</p>
+<ol style="list-style-type: decimal">
+<li>Pick the <strong>least expensive element</strong> out of the list.</li>
+</ol>
+<p>This approach produces mazes like the one seen below.</p>
+<p><prim's maze, b&w></p>
+<p>Let's color it to get a better sense of the global structure. Notice that the global structure is much more complex than in our previous approach, but that the local structure remains random. A Prim's maze is a beautiful thing! It also constitutes a <em>good</em> maze from a straightforward design perspective: there are long, complex, blind alleys, and the path-distance of any given node is not easily predicted based on its position in the grid.</p>
+<p><prim's maze, colored></p>
+<h2 id="restricted-randomness-depth-first-growth">Restricted Randomness &amp; Depth First Growth</h2>
+<p>Before solving our mazes, let's try out one more change. Suppose we wanted mazes with extremely deep, winding paths. How would we change our path-extension algorithm to produce that?</p>
+<p>One way to create deep mazes is based on <strong>depth first search</strong> (DFS), a tree-searching algorithm. DFS sets its search trajectory to prioritize the current path. In other words, it tries to keep going along a particular branch as far as possible before exploring other, earlier options.</p>
+<p>A non-randomized depth-first growth maze looks like this:</p>
+<p><dfs non-maze, b&w></p>
+<p>In order to give our DFS maze some complexity, we choose randomly from the N most recently added elements in our list of possible path extensions. Let's set N to 4, since any given node can have at most four valid unincorporated neighbor nodes. And here's our maze:</p>
+<p><dfs maze, b&w></p>
+<p>When we colorize it, the global structure becomes clear. Compare our depth first maze, right, with our initial random-growth maze, left. The difference in total depth is striking. Notice how many times our DFS maze cycles through the color spectrum before it fills the space!</p>
+<p><bfs maze, colorized> <dfs maze, colorized></p>
+<p>However, there's a big downside to our DFS maze. Because DFS is biased in favor of extending the current branch of the tree, our maze ends up becoming a couple of very long, locally simple corridors. A we will see below, the solution to a DFS maze may be very convoluted, but it's not hard to find.</p>
+<h1 id="maze-solvers">Maze Solvers</h1>
+<p>Speaking of solving mazes, let's do some of that! First we'll cover the two most basic algorithms, then the fun ones.</p>
+<h2 id="depth-first-search">Depth First Search</h2>
+<p>Depth First Search is a simple algorithm for finding the path to a target node in a tree, given a starting point. DFS uses a stack to maintain a list of nodes to check.</p>
+<ol style="list-style-type: decimal">
+<li>Start at the root.</li>
+<li>Pop the last (i.e. most recently added) element off the stack.</li>
+<li>Check for a match. If found, return the target node.</li>
+<li>Add each of the current node's children to the stack.</li>
+<li>Repeat until a match is found, or the stack is empty.</li>
+</ol>
+<p>The result is a search path that goes as deep as possible down a single branch before trying another branch. Below you can see DFS solve each of our three maze types. I have placed the root of each maze in the exact center to better show the behavior of the algorithm.</p>
+<p><bfs maze, with dfs solver><br />
+<prims maze, with dfs solver><br />
+<dfs maze, with dfs solver></p>
+<h2 id="breadth-first-search">Breadth First Search</h2>
+<p>Breadth First Search is similar to DFS, but it treats the list of nodes to search as a queue instead of a stack. In other words, step 2 of the algorithm listed above becomes:</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Shift the first (i.e. first added) element out of the queue.</li>
+</ol>
+<p>The result is the smooth radial expansion you see below.</p>
+<p><prims maze, with bfs solver (center starting point)></p>
+<p>Comparing BFS to DFS, we see that BFS is potentially much more expensive in terms of the number of nodes explored before finding the solution. This depends in part on the relative position of root and target within the maze. If the root and target are close relative to the overall tree, BFS will tend to outperform DFS.</p>
+<p><prim's maze, bfs solver, root and target near center> <prim's maze, dfs solver, root and target near center></p>
+<p>If not, DFS will tend to outperform BFS. Consider that, if the root and target are maximally distant from each other within the maze, BFS will have to explore every other path before finding the goal.</p>
+<p><bfs maze, with bfs solver (corner starting point)></p>
+<h2 id="dijkstras-algorithm">Dijkstra's Algorithm</h2>
+<p>DFS and BFS are cool, and they're both guaranteed to find solutions under normal conditions (e.g. provided our maze is finite and our target is reachable). But they're not very smart. As we've seen above, both algorithms are agnostic about the structure of the maze and the probability of success searching along any given trajectory. We can do better!</p>
+<p>When we wanted to improve the structure of our generated maze, we used randomized weighting and Prim's algorithm. In order to build a smart maze solver, we're going to take a similar approach. In this case we will use a heuristic-guided improvement on Dijkstra's algorithm called A* (&quot;A-Star&quot;).</p>
+<p><strong>Dijkstra's Algorithm</strong> is a path-finding method that prioritizes the least-expensive available node in our search queue. Typically we implement this using a <strong>min-heap priority queue</strong>, which is a <em>very speedy</em> data structure for maintaining a list in which the first element is guaranteed to have the minimum value in the entire list. (Note, our implementation of Prim's above uses a priority queue like this too!)</p>
+<p>Dijkstra's proceeds like BFS, with changes to step 2:</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Remove the minimum entry from the priority queue.</li>
+</ol>
+<p>and step 4:</p>
+<ol start="4" style="list-style-type: decimal">
+<li>Insert each of the current node's children into the priority queue.</li>
+</ol>
+<p>So far so good. The only problem is that, because in reality our maze is an <em>unweighted</em> graph, there's actually no difference between the cost of exploring any one node and exploring any other. That means that our priority queue will honor a First-In, First-Out (FIFO) ordering principle, making Dijkstra's algorithm identical in execution to .... Breadth First Search. Behold:</p>
+<p><bfs maze with dijkstra solver></p>
+<p>So much for doing better!</p>
+<h2 id="a-search">A* Search</h2>
+<p>Now that we've built out a Dijkstra maze solver, though, we can use it to implement an intuition-based path-finding-algorithm called A*.</p>
+<p>A* keeps track of two different factors. First, how expensive it was to get to a given node from the origin. Second, the minimum predicted cost of getting from that node to the goal. A* predicts the cost of traveling through a given node based on a heuristic function we provide it, which is based on the structure of our graph.</p>
+<p>In this case, we set the heuristic function to calculate the diagonal distance between the current node and the target node, so that our search will be encouraged to go as directly toward the goal as possible.</p>
+<p>How does A* perform? Let's take a look:</p>
+<p><bfs maze with A* solver> <prims maze with A* solver> <dfs maze with A* solver></p>
+<p>You can see that when a relatively direct path is available, A* tends to find it, and quickly. A* also has an advantage when the root and target are close together, relative to the size of the graph. A* doesn't always outperform DFS (or even BFS—intuition can lead us astray!), but it is about as good in the worst case, and better on average.</p>
+<p>Finally, to sum up, you can see all three of our solvers solving all three of our mazes at once!</p>
+<p><etc></p>
+</body>
+</html>

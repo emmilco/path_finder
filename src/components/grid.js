@@ -2,7 +2,7 @@ import Node from './node';
 
 class Grid {
   constructor(width, height){
-    this.array = [...Array(height).keys()].map(i => Array(width));
+    this.array = [...Array(width).keys()].map(i => Array(height));
     this.width = width;
     this.height = height;
     this.populateArray();

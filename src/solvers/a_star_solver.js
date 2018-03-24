@@ -26,7 +26,7 @@ class aStarSolver {
     // NOTE: using diagonal distance because of generator characteristics
     const dx = Math.abs(current[0] - this.targetCoords[0]);
     const dy = Math.abs(current[1] - this.targetCoords[1]);
-    return Math.sqrt(dx * dx + dy * dy);
+    return Math.pow(dx * dx *dx + dy * dy * dy, 1/3);
   }
 
   search() {

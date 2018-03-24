@@ -144,6 +144,10 @@ var _bfs_maze_generator = __webpack_require__(9);
 
 var _bfs_maze_generator2 = _interopRequireDefault(_bfs_maze_generator);
 
+var _bfs_non_maze_generator = __webpack_require__(17);
+
+var _bfs_non_maze_generator2 = _interopRequireDefault(_bfs_non_maze_generator);
+
 var _prims_maze_generator = __webpack_require__(10);
 
 var _prims_maze_generator2 = _interopRequireDefault(_prims_maze_generator);
@@ -163,12 +167,12 @@ var _a_star_solver2 = _interopRequireDefault(_a_star_solver);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-  var root = [0, 50];
-  var target = [98, 50];
+  var root = [30, 30];
+  var target = [20, 20];
   var grid1 = new _grid2.default(100, 100);
   var grid2 = new _grid2.default(100, 100);
   var grid3 = new _grid2.default(100, 100);
-  (0, _bfs_maze_generator2.default)(root, grid1, "1");
+  (0, _bfs_non_maze_generator2.default)(root, grid1, "1");
   (0, _bfs_maze_generator2.default)(root, grid2, "2");
   (0, _bfs_maze_generator2.default)(root, grid3, "3");
   window.setTimeout(function () {
@@ -239,8 +243,8 @@ var Grid = function () {
   function Grid(width, height) {
     _classCallCheck(this, Grid);
 
-    this.array = [].concat(_toConsumableArray(Array(height).keys())).map(function (i) {
-      return Array(width);
+    this.array = [].concat(_toConsumableArray(Array(width).keys())).map(function (i) {
+      return Array(height);
     });
     this.width = width;
     this.height = height;
@@ -313,7 +317,7 @@ Object.defineProperty(exports, "__esModule", {
 function canvasDraw(node, ctx) {
   var size = 5;
   var distance = node.distance();
-  ctx.fillStyle = "hsl(\n    " + distance * 2 + ",\n    " + (50 + 20 * Math.sin(distance / 3)) + "%,\n    " + (50 + 10 * Math.cos(distance / 3)) + "%)";
+  ctx.fillStyle = "hsl(\n    " + distance * 3 + ",\n    " + (50 + 20 * Math.sin(distance / 6)) + "%,\n    " + (50 + 10 * Math.cos(distance / 12)) + "%)";
   if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size, node.y * size, size, size);
 }
@@ -832,7 +836,7 @@ var aStarSolver = function () {
       // NOTE: using diagonal distance because of generator characteristics
       var dx = Math.abs(current[0] - this.targetCoords[0]);
       var dy = Math.abs(current[1] - this.targetCoords[1]);
-      return Math.sqrt(dx * dx + dy * dy);
+      return Math.pow(dx * dx * dx + dy * dy * dy, 1 / 3);
     }
   }, {
     key: 'search',
@@ -984,6 +988,65 @@ var PriorityQueue = function () {
 }();
 
 exports.default = PriorityQueue;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+var _canvas_draw = __webpack_require__(4);
+
+var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function bfsNonMazeGenerator(root, grid, canvasId) {
+  var canvas = document.getElementById('' + canvasId);
+  var ctx = canvas.getContext("2d");
+  var candidates = [];
+  grid.root = root;
+  candidates.push(grid.array[root[0]][root[1]]);
+
+  var traversalStep = function traversalStep() {
+    if (candidates.length === 0) return;
+
+    var active = candidates.shift();
+    active.type = "path";
+    if (active.parent) {
+      var edge = active.edgeToParent();
+      var edgeNode = grid.array[edge[0]][edge[1]];
+      edgeNode.type = 'path';
+      edgeNode.parent = active.parent;
+      (0, _canvas_draw2.default)(edgeNode, ctx);
+    }
+    var children = active.candNeighbors.filter(function (neighbor) {
+      return grid.isOpenAt(neighbor[0], neighbor[1]);
+    });
+    children.forEach(function (child) {
+      var node = grid.array[child[0]][child[1]];
+      candidates.push(node);
+      node.parent = active;
+      active.children.push(node);
+    });
+    (0, _canvas_draw2.default)(active, ctx);
+    window.setTimeout(traversalStep, 0);
+    // traversalStep();
+  };
+
+  traversalStep();
+}
+
+exports.default = bfsNonMazeGenerator;
 
 /***/ })
 /******/ ]);
