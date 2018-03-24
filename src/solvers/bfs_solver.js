@@ -2,10 +2,10 @@ import Node from '../components/node';
 import canvasSearchDraw from '../util/canvas_search_draw';
 import canvasFoundDraw from '../util/canvas_found_draw';
 
-function bfsSolver (rootCoords, grid, method) {
-  const target = [grid.height - 2, grid.width - 2];
+function bfsSolver (rootCoords, grid, method, canvasId, target) {
+  // const target = [grid.height - 2, grid.width - 2];
   const root = rootCoords;
-  const canvas = document.getElementById("canvas");
+  const canvas = document.getElementById(`${canvasId}`);
   const ctx = canvas.getContext("2d");
   const candidates = [];
   let explored = 0;
@@ -27,7 +27,7 @@ function bfsSolver (rootCoords, grid, method) {
       canvasSearchDraw(edgeNode, ctx);
     }
     if (active.x === target[0] && active.y === target[1]) {
-      markPathTo(active, grid);
+      markPathTo(active, grid, ctx);
       console.log(explored);
       return;
     }
@@ -39,15 +39,13 @@ function bfsSolver (rootCoords, grid, method) {
   traversalStep();
 }
 
-function markPathTo(node, grid) {
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
+function markPathTo(node, grid, ctx) {
   canvasFoundDraw(node, ctx);
   if (node.parent) {
     let edge = node.edgeToParent();
     let edgeNode = grid.array[edge[0]][edge[1]];
     canvasFoundDraw(edgeNode, ctx);
-    window.setTimeout(() => markPathTo(node.parent, grid), 0);
+    window.setTimeout(() => markPathTo(node.parent, grid, ctx), 0);
   }
 
 }

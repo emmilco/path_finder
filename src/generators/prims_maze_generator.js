@@ -1,8 +1,8 @@
 import Node from '../components/node';
 import canvasDraw from '../util/canvas_draw';
 
-function primsMazeGenerator (root, grid) {
-  const canvas = document.getElementById("canvas");
+function primsMazeGenerator (root, grid, canvasId) {
+  const canvas = document.getElementById(`${canvasId}`);
   const ctx = canvas.getContext("2d");
   const candidates = [];
   grid.root = root;

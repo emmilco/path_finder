@@ -3,10 +3,12 @@ import canvasSearchDraw from '../util/canvas_search_draw';
 import canvasFoundDraw from '../util/canvas_found_draw';
 
 class aStarSolver {
-  constructor(rootCoords, grid){
+  constructor(rootCoords, grid, canvasId, target){
+    this.canvasId = canvasId;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
-    this.targetCoords = [grid.height - 2, grid.width - 2];
+    // this.targetCoords = [grid.height - 2, grid.width - 2];
+    this.targetCoords = target;
     this.examined = {};
     this.cameFrom = {};
     this.candidates = new PriorityQueue((a,b) => {
@@ -21,16 +23,16 @@ class aStarSolver {
   }
 
   heuristic(current){
-    // NOTE: returns the Manhattan distance between two nodes
+    // NOTE: using diagonal distance because of generator characteristics
     const dx = Math.abs(current[0] - this.targetCoords[0]);
     const dy = Math.abs(current[1] - this.targetCoords[1]);
-    return dx + dy;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
   search() {
     if (this.candidates.isEmpty()) return -1;
     const active = this.candidates.removeMin();
-    const canvas = document.getElementById("canvas");
+    const canvas = document.getElementById(`${this.canvasId}`);
     const ctx = canvas.getContext("2d");
     if (active.parent){
       let edge = active.edgeToParent();
@@ -40,7 +42,7 @@ class aStarSolver {
     canvasSearchDraw(active, ctx);
 
     if (active.coords.toString() === this.targetCoords.toString()) {
-      return this.reconstructPath(active);
+      return this.reconstructPath(active, ctx);
     }
     this.examined[active.coords] = true;
     active.children.forEach((child) => {
@@ -62,15 +64,13 @@ class aStarSolver {
     window.setTimeout(() => this.search(), 0);
   }
 
-  reconstructPath(node){
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
+  reconstructPath(node, ctx){
     canvasFoundDraw(node, ctx);
     if (node.parent) {
       let edge = node.edgeToParent();
       let edgeNode = this.grid.array[edge[0]][edge[1]];
       canvasFoundDraw(edgeNode, ctx);
-      window.setTimeout(() => this.reconstructPath(node.parent, this.grid), 0);
+      window.setTimeout(() => this.reconstructPath(node.parent, ctx), 0);
     }
   }
 }

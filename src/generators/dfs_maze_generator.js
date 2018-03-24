@@ -1,8 +1,8 @@
 import Node from '../components/node';
 import canvasDraw from '../util/canvas_draw';
 
-function dfsMazeGenerator (root, grid) {
-  const canvas = document.getElementById("canvas");
+function dfsMazeGenerator (root, grid, canvasId) {
+  const canvas = document.getElementById(`${canvasId}`);
   const ctx = canvas.getContext("2d");
   const candidates = [];
   grid.root = root;

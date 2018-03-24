@@ -163,11 +163,52 @@ var _a_star_solver2 = _interopRequireDefault(_a_star_solver);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-  window.grid = new _grid2.default(100, 100);
-  (0, _prims_maze_generator2.default)([0, 50], window.grid);
-  // window.setTimeout(() => bfsSolver([0,50], window.grid, "bfs"), 15000);
+  var root = [0, 50];
+  var target = [98, 50];
+  var grid1 = new _grid2.default(100, 100);
+  var grid2 = new _grid2.default(100, 100);
+  var grid3 = new _grid2.default(100, 100);
+  (0, _bfs_maze_generator2.default)(root, grid1, "1");
+  (0, _bfs_maze_generator2.default)(root, grid2, "2");
+  (0, _bfs_maze_generator2.default)(root, grid3, "3");
   window.setTimeout(function () {
-    return new _a_star_solver2.default([0, 50], window.grid).search();
+    return (0, _bfs_solver2.default)(root, grid1, "bfs", "1", target);
+  }, 15000);
+  window.setTimeout(function () {
+    return (0, _bfs_solver2.default)(root, grid2, "dfs", "2", target);
+  }, 15000);
+  window.setTimeout(function () {
+    return new _a_star_solver2.default(root, grid3, "3", target).search();
+  }, 15000);
+  var grid4 = new _grid2.default(100, 100);
+  var grid5 = new _grid2.default(100, 100);
+  var grid6 = new _grid2.default(100, 100);
+  (0, _prims_maze_generator2.default)(root, grid4, "4");
+  (0, _prims_maze_generator2.default)(root, grid5, "5");
+  (0, _prims_maze_generator2.default)(root, grid6, "6");
+  window.setTimeout(function () {
+    return (0, _bfs_solver2.default)(root, grid4, "bfs", "4", target);
+  }, 15000);
+  window.setTimeout(function () {
+    return (0, _bfs_solver2.default)(root, grid5, "dfs", "5", target);
+  }, 15000);
+  window.setTimeout(function () {
+    return new _a_star_solver2.default(root, grid6, "6", target).search();
+  }, 15000);
+  var grid7 = new _grid2.default(100, 100);
+  var grid8 = new _grid2.default(100, 100);
+  var grid9 = new _grid2.default(100, 100);
+  (0, _dfs_maze_generator2.default)(root, grid7, "7");
+  (0, _dfs_maze_generator2.default)(root, grid8, "8");
+  (0, _dfs_maze_generator2.default)(root, grid9, "9");
+  window.setTimeout(function () {
+    return (0, _bfs_solver2.default)(root, grid7, "bfs", "7", target);
+  }, 15000);
+  window.setTimeout(function () {
+    return (0, _bfs_solver2.default)(root, grid8, "dfs", "8", target);
+  }, 15000);
+  window.setTimeout(function () {
+    return new _a_star_solver2.default(root, grid9, "9", target).search();
   }, 15000);
 });
 
@@ -435,8 +476,8 @@ var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function bfsMazeGenerator(root, grid) {
-  var canvas = document.getElementById("canvas");
+function bfsMazeGenerator(root, grid, canvasId) {
+  var canvas = document.getElementById('' + canvasId);
   var ctx = canvas.getContext("2d");
   var candidates = [];
   grid.root = root;
@@ -494,8 +535,8 @@ var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function primsMazeGenerator(root, grid) {
-  var canvas = document.getElementById("canvas");
+function primsMazeGenerator(root, grid, canvasId) {
+  var canvas = document.getElementById('' + canvasId);
   var ctx = canvas.getContext("2d");
   var candidates = [];
   grid.root = root;
@@ -555,8 +596,8 @@ var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function dfsMazeGenerator(root, grid) {
-  var canvas = document.getElementById("canvas");
+function dfsMazeGenerator(root, grid, canvasId) {
+  var canvas = document.getElementById('' + canvasId);
   var ctx = canvas.getContext("2d");
   var candidates = [];
   grid.root = root;
@@ -617,10 +658,10 @@ var _canvas_found_draw2 = _interopRequireDefault(_canvas_found_draw);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function bfsSolver(rootCoords, grid, method) {
-  var target = [grid.height - 2, grid.width - 2];
+function bfsSolver(rootCoords, grid, method, canvasId, target) {
+  // const target = [grid.height - 2, grid.width - 2];
   var root = rootCoords;
-  var canvas = document.getElementById("canvas");
+  var canvas = document.getElementById('' + canvasId);
   var ctx = canvas.getContext("2d");
   var candidates = [];
   var explored = 0;
@@ -642,7 +683,7 @@ function bfsSolver(rootCoords, grid, method) {
       (0, _canvas_search_draw2.default)(edgeNode, ctx);
     }
     if (active.x === target[0] && active.y === target[1]) {
-      markPathTo(active, grid);
+      markPathTo(active, grid, ctx);
       console.log(explored);
       return;
     }
@@ -654,16 +695,14 @@ function bfsSolver(rootCoords, grid, method) {
   traversalStep();
 }
 
-function markPathTo(node, grid) {
-  var canvas = document.getElementById("canvas");
-  var ctx = canvas.getContext("2d");
+function markPathTo(node, grid, ctx) {
   (0, _canvas_found_draw2.default)(node, ctx);
   if (node.parent) {
     var edge = node.edgeToParent();
     var edgeNode = grid.array[edge[0]][edge[1]];
     (0, _canvas_found_draw2.default)(edgeNode, ctx);
     window.setTimeout(function () {
-      return markPathTo(node.parent, grid);
+      return markPathTo(node.parent, grid, ctx);
     }, 0);
   }
 }
@@ -764,14 +803,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var aStarSolver = function () {
-  function aStarSolver(rootCoords, grid) {
+  function aStarSolver(rootCoords, grid, canvasId, target) {
     var _this = this;
 
     _classCallCheck(this, aStarSolver);
 
+    this.canvasId = canvasId;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
-    this.targetCoords = [grid.height - 2, grid.width - 2];
+    // this.targetCoords = [grid.height - 2, grid.width - 2];
+    this.targetCoords = target;
     this.examined = {};
     this.cameFrom = {};
     this.candidates = new _priority_queue2.default(function (a, b) {
@@ -788,10 +829,10 @@ var aStarSolver = function () {
   _createClass(aStarSolver, [{
     key: 'heuristic',
     value: function heuristic(current) {
-      // NOTE: returns the Manhattan distance between two nodes
+      // NOTE: using diagonal distance because of generator characteristics
       var dx = Math.abs(current[0] - this.targetCoords[0]);
       var dy = Math.abs(current[1] - this.targetCoords[1]);
-      return dx + dy;
+      return Math.sqrt(dx * dx + dy * dy);
     }
   }, {
     key: 'search',
@@ -800,7 +841,7 @@ var aStarSolver = function () {
 
       if (this.candidates.isEmpty()) return -1;
       var active = this.candidates.removeMin();
-      var canvas = document.getElementById("canvas");
+      var canvas = document.getElementById('' + this.canvasId);
       var ctx = canvas.getContext("2d");
       if (active.parent) {
         var edge = active.edgeToParent();
@@ -810,7 +851,7 @@ var aStarSolver = function () {
       (0, _canvas_search_draw2.default)(active, ctx);
 
       if (active.coords.toString() === this.targetCoords.toString()) {
-        return this.reconstructPath(active);
+        return this.reconstructPath(active, ctx);
       }
       this.examined[active.coords] = true;
       active.children.forEach(function (child) {
@@ -834,18 +875,16 @@ var aStarSolver = function () {
     }
   }, {
     key: 'reconstructPath',
-    value: function reconstructPath(node) {
+    value: function reconstructPath(node, ctx) {
       var _this3 = this;
 
-      var canvas = document.getElementById("canvas");
-      var ctx = canvas.getContext("2d");
       (0, _canvas_found_draw2.default)(node, ctx);
       if (node.parent) {
         var edge = node.edgeToParent();
         var edgeNode = this.grid.array[edge[0]][edge[1]];
         (0, _canvas_found_draw2.default)(edgeNode, ctx);
         window.setTimeout(function () {
-          return _this3.reconstructPath(node.parent, _this3.grid);
+          return _this3.reconstructPath(node.parent, ctx);
         }, 0);
       }
     }
