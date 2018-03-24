@@ -1,9 +1,10 @@
 function canvasDraw(node, ctx){
   const size = 5;
+  const distance = node.distance();
   ctx.fillStyle = `hsl(
-    ${node.distance()*2},
-    ${50 + 20*Math.sin(node.distance()/3)}%,
-    ${50 + 10*Math.cos(node.distance()/3)}%)`;
+    ${distance*2},
+    ${50 + 20*Math.sin(distance/3)}%,
+    ${50 + 10*Math.cos(distance/3)}%)`;
   if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size,node.y * size, size, size);
 }

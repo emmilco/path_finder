@@ -164,10 +164,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 document.addEventListener("DOMContentLoaded", function () {
   window.grid = new _grid2.default(100, 100);
-  (0, _prims_maze_generator2.default)([0, 0], window.grid);
-  // window.setTimeout(() => bfsSolver(window.grid, "dfs"), 15000);
+  (0, _prims_maze_generator2.default)([0, 50], window.grid);
+  // window.setTimeout(() => bfsSolver([0,50], window.grid, "bfs"), 15000);
   window.setTimeout(function () {
-    return new _a_star_solver2.default([0, 0], window.grid).search();
+    return new _a_star_solver2.default([0, 50], window.grid).search();
   }, 15000);
 });
 
@@ -204,6 +204,7 @@ var Grid = function () {
     this.width = width;
     this.height = height;
     this.populateArray();
+    this.root = [];
   }
 
   _createClass(Grid, [{
@@ -223,7 +224,7 @@ var Grid = function () {
   }, {
     key: "isOpenAt",
     value: function isOpenAt(x, y) {
-      if (x + y === 0) return false;
+      if (x === this.root[0] && y === this.root[1]) return false;
       return this.contains(x, y) && !this.array[x][y].parent;
     }
   }, {
@@ -270,7 +271,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 function canvasDraw(node, ctx) {
   var size = 5;
-  ctx.fillStyle = "hsl(\n    " + node.distance() * 2 + ",\n    " + (50 + 20 * Math.sin(node.distance() / 3)) + "%,\n    " + (50 + 10 * Math.cos(node.distance() / 3)) + "%)";
+  var distance = node.distance();
+  ctx.fillStyle = "hsl(\n    " + distance * 2 + ",\n    " + (50 + 20 * Math.sin(distance / 3)) + "%,\n    " + (50 + 10 * Math.cos(distance / 3)) + "%)";
   if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size, node.y * size, size, size);
 }
@@ -437,7 +439,8 @@ function bfsMazeGenerator(root, grid) {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
-  candidates.push(grid.array[0][0]);
+  grid.root = root;
+  candidates.push(grid.array[root[0]][root[1]]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
@@ -495,7 +498,8 @@ function primsMazeGenerator(root, grid) {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
-  candidates.push(grid.array[0][0]);
+  grid.root = root;
+  candidates.push(grid.array[root[0]][root[1]]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
@@ -555,7 +559,8 @@ function dfsMazeGenerator(root, grid) {
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
-  candidates.push(grid.array[0][0]);
+  grid.root = root;
+  candidates.push(grid.array[root[0]][root[1]]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;
@@ -612,14 +617,14 @@ var _canvas_found_draw2 = _interopRequireDefault(_canvas_found_draw);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function bfsSolver(grid, method) {
+function bfsSolver(rootCoords, grid, method) {
   var target = [grid.height - 2, grid.width - 2];
-  var root = [0, 0];
+  var root = rootCoords;
   var canvas = document.getElementById("canvas");
   var ctx = canvas.getContext("2d");
   var candidates = [];
   var explored = 0;
-  candidates.push(grid.array[0][0]);
+  candidates.push(grid.array[root[0]][root[1]]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) return;

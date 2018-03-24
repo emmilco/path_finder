@@ -10,7 +10,7 @@ import aStarSolver from './solvers/a_star_solver';
 
 document.addEventListener("DOMContentLoaded", () => {
   window.grid = new Grid(100,100);
-  primsMazeGenerator([0,0], window.grid);
-  // window.setTimeout(() => bfsSolver(window.grid, "dfs"), 15000);
-  window.setTimeout(() => (new aStarSolver([0,0], window.grid)).search(), 15000);
+  primsMazeGenerator([0,50], window.grid);
+  // window.setTimeout(() => bfsSolver([0,50], window.grid, "bfs"), 15000);
+  window.setTimeout(() => (new aStarSolver([0,50], window.grid)).search(), 15000);
 });

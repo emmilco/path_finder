@@ -2,14 +2,14 @@ import Node from '../components/node';
 import canvasSearchDraw from '../util/canvas_search_draw';
 import canvasFoundDraw from '../util/canvas_found_draw';
 
-function bfsSolver (grid, method) {
+function bfsSolver (rootCoords, grid, method) {
   const target = [grid.height - 2, grid.width - 2];
-  const root = [0,0];
+  const root = rootCoords;
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   const candidates = [];
   let explored = 0;
-  candidates.push(grid.array[0][0]);
+  candidates.push(grid.array[root[0]][root[1]]);
 
   const traversalStep = () => {
     if (candidates.length === 0) return;

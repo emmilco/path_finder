@@ -5,7 +5,8 @@ function dfsMazeGenerator (root, grid) {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   const candidates = [];
-  candidates.push(grid.array[0][0]);
+  grid.root = root;
+  candidates.push(grid.array[root[0]][root[1]]);
 
   const traversalStep = () => {
     if (candidates.length === 0) return;

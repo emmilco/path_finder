@@ -6,6 +6,7 @@ class Grid {
     this.width = width;
     this.height = height;
     this.populateArray();
+    this.root = [];
   }
 
   populateArray(){
@@ -21,7 +22,7 @@ class Grid {
   }
 
   isOpenAt(x,y){
-    if (x + y === 0) return false;
+    if (x === this.root[0] && y === this.root[1]) return false;
     return this.contains(x,y) && !this.array[x][y].parent;
   }
 
