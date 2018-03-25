@@ -1,29 +1,29 @@
-# Pathfinder README
+# README
 
-## Description
+Pathfinder is a single-page demo of a few major maze-generation and pathfinding algorithms.  It is built completely in vanilla JavaScript (ES6), using HTML5 canvas elements in order to render the mazes.
 
-The application will be a single-page javascript app containing a canvas which will display a grid, and a series of buttons which will demonstrate various maze generation and pathfinding algorithms.  I would like to include at least four of each.  The site will also include links to webpages (external) with information about the algorithms featured, and short descriptions of how each one works in abstract.
-
-## MVP
-
-- Functional grid of squares with buttons to trigger animations.
-- Animations for at least two maze generation algorithms.
-- Animations for at least two maze-solving algorithms.
+[Live version.](https://emmilco.github.io/path_finder/)
 
 ## Technologies
 
-Canvas, d3, JavaScript, HTML, CSS
+JavaScript, Canvas, HTML5, CSS3
 
-## Implementation Timeline
+## Algorithms and Data Structures Used
 
-1 day, set up canvas, grid, cell logic
+- A*
+- BFS
+- DFS
+- Prim's Algorithm
+- Dijkstra's Algorithm
+- Binary MinHeap Priority Queue
+- Directed graphs
 
-2 days, implement algorithms
+## Overview
 
-1 day, finish implementing algorithms, do styling
+Each maze is implemented as a spanning tree consisting of nodes, which are represented as squares on a rectangular grid.  Each node has a few properties: x and y coordinates, parent, children, value.  Nodes are linked dynamically by each algorithm to create a spanning tree within the limits of the canvas.  
 
-## Nodes
+The various generating algorithms are implemented using a switch within a single generator function, which determines how the active node is chosen out of the pool of candidate nodes.
 
-Each maze is implemented as a spanning tree consisting of nodes.  The nodes are squares on a rectangular grid.  Each node has a few properties: x and y coordinates, parent, children.  Nodes are generated dynamically by each algorithm to fill the tree within the limits of the canvas.  E.g. the algorithm is given a root node at (0,0), and then creates nodes at available points, following its own principles, until it has generated a spanning tree that fills the entire space.
+A\* is implemented as an ES6 class.  Both it and the Prim's generator use a binary min-heap priority queue to reduce the cost of finding the optimal node within the pool of candidates.  
 
-Because the limits of the canvas are determined by its dimensions, it is not necessary to pre-generate the grid of nodes before the tree is constructed.  A grid should be available and left empty.  Checking for available node spaces within the grid happens based on the proximate entries within the grid, which is populated as the nodes are created.
+I also built an implementation of Fischer-Yates shuffle, as well as two simple grid-flooding functions, but found them ultimately unnecessary for the project.  [Visit the live site for further explanations!](https://emmilco.github.io/path_finder/)
