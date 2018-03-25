@@ -7,69 +7,69 @@ import aStar from './solvers/a_star_solver';
 document.addEventListener("DOMContentLoaded", () => {
 
   // bfsMazeGenerator(type, root, gridDims, canvasId, color, solver, method, target)
-  maze("prims", [0,0], [100,200], "0", true, aStar, null, [98,198]);
-
-  // <!-- Prims headliner-maze, color, A* solver -->
+  maze("prims", [0,0], [100,100], "0", true, aStar, null, [98,98]);
+  document.dispatchEvent(new Event("scroll"));
+  // Prims headliner-maze, color, A* solver
   maze("bfsNonMaze", [0,0], [100,100], "1", false);
 
-  // <!-- BFS non-maze, B&W -->
+  // BFS non-maze, B&W
   maze("bfsNonMaze", [0,0], [100,100], "1", false);
 
-  // <!-- BFS maze, B&W -->
+  // BFS maze, B&W
   maze("bfs", [0,0], [100,100], "2", false);
 
-  // <!-- BFS maze, Colored -->
+  // BFS maze, Colored
   maze("bfs", [0,0], [100,100], "3", true);
 
-  // <!-- Prim's maze, B&W -->
-  maze("prims", [0,0], [100,100], "4", false);
+  // Prim's maze, B&W
+  maze("prims", [0,0], [100,200], "4", false);
 
-  // <!-- Prim's maze, Colored -->
+  // Prim's maze, Colored
   maze("prims", [0,0], [100,100], "5", true);
 
-  // <!-- DFS non-maze, B&W -->
+  // DFS non-maze, B&W
   maze("dfsNonMaze", [0,0], [100,100], "6", false);
 
-  // <!-- DFS maze, B&W -->
+  // DFS maze, B&W
   maze("dfs", [0,0], [100,100], "7", false);
 
-  // <!-- BFS maze, Colorized -->
-  maze("bfs", [0,0], [100,100], "8", true);
+  // DFS maze, Colorized
+  maze("dfs", [0,0], [100,100], "8", true);
 
-  // <!-- DFS maze, Colorized -->
-  maze("dfs", [0,0], [100,100], "9", true);
+  // BFS maze, Colorized
+  maze("bfs", [0,0], [100,100], "9", true);
 
-  // <!-- BFS maze, with DFS solver, root at center -->
+  // BFS maze, with DFS solver, root at center
   maze("bfs", [50,50], [100,100], "10", true, bfsSolver, "dfs", [98,98]);
 
-  // <!-- Prim's maze, with DFS solver, root at center -->
+  // Prim's maze, with DFS solver, root at center
   maze("prims", [50,50], [100,100], "11", true, bfsSolver, "dfs", [98,98]);
 
-  // <!-- DFS maze, with DFS solver, root at center -->
+  // DFS maze, with DFS solver, root at center
   maze("dfs", [50,50], [100,100], "12", true, bfsSolver, "dfs", [98,98]);
 
-  // <!-- Prim's maze, BFS Solver, Root at center -->
+  // Prim's maze, BFS Solver, Root at center
   maze("bfs", [50,50], [100,100], "13", true, bfsSolver, "bfs", [98,98]);
 
-  // <!-- Prim's maze, BFS Solver, Root and Target near center -->
+  // Prim's maze, BFS Solver, Root and Target near center
   maze("prims", [40,50], [100,100], "14", true, bfsSolver, "bfs", [50,40]);
 
-  // <!-- Prim's maze, DFS Solver, Root and Target near center -->
+  // Prim's maze, DFS Solver, Root and Target near center
   maze("prims", [40,50], [100,100], "15", true, bfsSolver, "dfs", [50,40]);
 
-  // <!-- BFS maze, BFS Solver, Root at corner -->
+  // BFS maze, BFS Solver, Root at corner
   maze("bfs", [0,0], [100,100], "16", true, bfsSolver, "dfs", [98,98]);
 
-  // <!-- BFS maze, Dijkstra solver -->
+  // BFS maze, Dijkstra solver
 
 
-  // <!-- BFS maze, A* solver, Root at center -->
+  // BFS maze, A* solver, Root at center
   maze("bfs", [50,50], [100,100], "18", true, aStar, null, [98,98]);
 
-  // <!-- Prim's maze, A* solver, Root at center -->
+  // Prim's maze, A* solver, Root at center
   maze("prims", [50,50], [100,100], "19", true, aStar, null, [98,98]);
 
-  // <!-- DFS maze, A* solver, Root at center -->
+  // DFS maze, A* solver, Root at center
   maze("dfs", [50,50], [100,100], "20", true, aStar, null, [98,98]);
 
   maze("bfs", [0,0], [100,100], "21", true, bfsSolver, "dfs", [98,98]);

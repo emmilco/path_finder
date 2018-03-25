@@ -25,8 +25,8 @@ class aStarSolver {
   heuristic(current){
     const dx = Math.abs(current[0] - this.targetCoords[0]);
     const dy = Math.abs(current[1] - this.targetCoords[1]);
-    return dx + dy;
-    // return Math.sqrt(dx*dx + dy*dy);
+    // return dx + dy;
+    return Math.sqrt(dx*dx + dy*dy);
 
   }
 

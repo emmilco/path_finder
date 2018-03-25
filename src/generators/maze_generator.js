@@ -82,6 +82,13 @@ const maze = (type, root, gridDims, canvasId, color, solver, method, target) => 
   canvas.addEventListener("click", () => {
     mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
   });
+  const scrollHandler = () => {
+    if(canvas.getBoundingClientRect().bottom < window.innerHeight){
+      mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
+      document.removeEventListener("scroll", scrollHandler);
+    }
+  };
+  document.addEventListener("scroll", scrollHandler);
 };
 
 export default maze;

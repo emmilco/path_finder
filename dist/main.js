@@ -151,69 +151,69 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener("DOMContentLoaded", function () {
 
   // bfsMazeGenerator(type, root, gridDims, canvasId, color, solver, method, target)
-  (0, _maze_generator2.default)("prims", [0, 0], [100, 200], "0", true, _a_star_solver2.default, null, [98, 198]);
-
-  // <!-- Prims headliner-maze, color, A* solver -->
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "0", true, _a_star_solver2.default, null, [98, 98]);
+  document.dispatchEvent(new Event("scroll"));
+  // Prims headliner-maze, color, A* solver
   (0, _maze_generator2.default)("bfsNonMaze", [0, 0], [100, 100], "1", false);
 
-  // <!-- BFS non-maze, B&W -->
+  // BFS non-maze, B&W
   (0, _maze_generator2.default)("bfsNonMaze", [0, 0], [100, 100], "1", false);
 
-  // <!-- BFS maze, B&W -->
+  // BFS maze, B&W
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "2", false);
 
-  // <!-- BFS maze, Colored -->
+  // BFS maze, Colored
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "3", true);
 
-  // <!-- Prim's maze, B&W -->
-  (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "4", false);
+  // Prim's maze, B&W
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 200], "4", false);
 
-  // <!-- Prim's maze, Colored -->
+  // Prim's maze, Colored
   (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "5", true);
 
-  // <!-- DFS non-maze, B&W -->
+  // DFS non-maze, B&W
   (0, _maze_generator2.default)("dfsNonMaze", [0, 0], [100, 100], "6", false);
 
-  // <!-- DFS maze, B&W -->
+  // DFS maze, B&W
   (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "7", false);
 
-  // <!-- BFS maze, Colorized -->
-  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "8", true);
+  // DFS maze, Colorized
+  (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "8", true);
 
-  // <!-- DFS maze, Colorized -->
-  (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "9", true);
+  // BFS maze, Colorized
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "9", true);
 
-  // <!-- BFS maze, with DFS solver, root at center -->
+  // BFS maze, with DFS solver, root at center
   (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "10", true, _bfs_solver2.default, "dfs", [98, 98]);
 
-  // <!-- Prim's maze, with DFS solver, root at center -->
+  // Prim's maze, with DFS solver, root at center
   (0, _maze_generator2.default)("prims", [50, 50], [100, 100], "11", true, _bfs_solver2.default, "dfs", [98, 98]);
 
-  // <!-- DFS maze, with DFS solver, root at center -->
+  // DFS maze, with DFS solver, root at center
   (0, _maze_generator2.default)("dfs", [50, 50], [100, 100], "12", true, _bfs_solver2.default, "dfs", [98, 98]);
 
-  // <!-- Prim's maze, BFS Solver, Root at center -->
+  // Prim's maze, BFS Solver, Root at center
   (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "13", true, _bfs_solver2.default, "bfs", [98, 98]);
 
-  // <!-- Prim's maze, BFS Solver, Root and Target near center -->
+  // Prim's maze, BFS Solver, Root and Target near center
   (0, _maze_generator2.default)("prims", [40, 50], [100, 100], "14", true, _bfs_solver2.default, "bfs", [50, 40]);
 
-  // <!-- Prim's maze, DFS Solver, Root and Target near center -->
+  // Prim's maze, DFS Solver, Root and Target near center
   (0, _maze_generator2.default)("prims", [40, 50], [100, 100], "15", true, _bfs_solver2.default, "dfs", [50, 40]);
 
-  // <!-- BFS maze, BFS Solver, Root at corner -->
+  // BFS maze, BFS Solver, Root at corner
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "16", true, _bfs_solver2.default, "dfs", [98, 98]);
 
-  // <!-- BFS maze, Dijkstra solver -->
+  // BFS maze, Dijkstra solver
 
 
-  // <!-- BFS maze, A* solver, Root at center -->
+  // BFS maze, A* solver, Root at center
   (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "18", true, _a_star_solver2.default, null, [98, 98]);
 
-  // <!-- Prim's maze, A* solver, Root at center -->
+  // Prim's maze, A* solver, Root at center
   (0, _maze_generator2.default)("prims", [50, 50], [100, 100], "19", true, _a_star_solver2.default, null, [98, 98]);
 
-  // <!-- DFS maze, A* solver, Root at center -->
+  // DFS maze, A* solver, Root at center
   (0, _maze_generator2.default)("dfs", [50, 50], [100, 100], "20", true, _a_star_solver2.default, null, [98, 98]);
 
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "21", true, _bfs_solver2.default, "dfs", [98, 98]);
@@ -669,8 +669,8 @@ var aStarSolver = function () {
     value: function heuristic(current) {
       var dx = Math.abs(current[0] - this.targetCoords[0]);
       var dy = Math.abs(current[1] - this.targetCoords[1]);
-      return dx + dy;
-      // return Math.sqrt(dx*dx + dy*dy);
+      // return dx + dy;
+      return Math.sqrt(dx * dx + dy * dy);
     }
   }, {
     key: 'search',
@@ -942,6 +942,13 @@ var maze = function maze(type, root, gridDims, canvasId, color, solver, method, 
   canvas.addEventListener("click", function () {
     mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
   });
+  var scrollHandler = function scrollHandler() {
+    if (canvas.getBoundingClientRect().bottom < window.innerHeight) {
+      mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
+      document.removeEventListener("scroll", scrollHandler);
+    }
+  };
+  document.addEventListener("scroll", scrollHandler);
 };
 
 exports.default = maze;
