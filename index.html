@@ -19,7 +19,8 @@
       max-width: 960px;
       margin: 0 auto;
       font-family: 'Roboto', sans-serif;
-      padding-bottom: 300px;
+      padding-bottom: 200px;
+      padding-left: 10px;
     }
 
     p {
@@ -36,10 +37,6 @@
       margin: 0 auto;
     }
 
-    .final-recap canvas {
-      width: 30%;
-    }
-
     .canvas-box-wrapper {
       display: flex;
       flex-direction: row;
@@ -49,10 +46,14 @@
       margin-top: 250px;
     }
 
-    .canvas-box-wrapper canvas {
-      width: 70%;
+    .canvas-wrapper {
       margin-left: 30px;
       margin-top: 20px;
+      width: 100%;
+    }
+
+    .canvas-wrapper canvas {
+      width: 100%;
     }
 
     .maze-double {
@@ -61,7 +62,7 @@
     }
 
     .maze-double canvas {
-      width: 70%;
+      width: 95%;
     }
 
     .maze-horiz-double {
@@ -82,7 +83,20 @@
     .caption {
       font-style: italic;
       font-size: 12px;
-      margin-left: 30px;
+      width: auto;
+    }
+
+    .final-recap {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .final-recap .canvas-wrapper {
+      width: 30%;
+    }
+
+    .final-recap canvas {
+      width: 100%;
     }
   </style>
 </head>
@@ -96,15 +110,15 @@
 
       <h2 id="spanning-trees-and-maze-design">Spanning Trees and Maze Design</h2>
 
-      <p>What makes a maze a maze? How would you go about building one?</p>
-
       <p>Mazes are designed to thwart our best intuitions about how to get from one place to another. In a well-designed maze, there is no straight path to the goal, and there are many dead ends along the way.</p>
+
+      <p>How would you go about building one?</p>
 
       <p>Making a good maze requires a heavy dose of randomness. We want walls and paths to appear without any apparent order. But we do need there to be <em>some</em> order, otherwise the maze would be insoluble.</p>
 
 
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <canvas id="0" width="495px" height="495px"></canvas>
       <p class="caption">A* Search solving a maze generated using Prim's Algorithm.</p>
     </div>
@@ -115,17 +129,17 @@
 
     <div class="left-text">
 
-      <p>One way to provide the minimum necessary connectedness to create a good maze is to build the maze as a spanning tree.</p>
+      <p>One way to provide the minimum necessary order to create a solvable maze is to build the maze as a spanning tree.</p>
 
       <p>A <strong>spanning tree</strong> is a kind of network. It follows two simple rules: (1) Every available point must be connected to the network, and (2) no point can be connected to itself. Total coverage, no cycles.</p>
 
       <p>There are many ways to generate spanning trees. Since points in a two-dimensional plane each have four neighbors, the easiest way for us will be to radiate outward from the start of the maze, connecting each point to all of its unconnected neighbors,
-        until the whole space is full.</p>
+        until the whole grid is connected.</p>
 
       <p>This produces a pretty boring maze. How can we do better?</p>
     </div>
 
-    <div>
+    <div class="canvas-wrapper">
       <!-- BFS non-maze, B&W -->
       <canvas id="1" width="495px" height="495px"></canvas>
       <p class="caption">Our simplest maze.</p>
@@ -138,7 +152,7 @@
     <div class="left-text">
 
       <h2 id="randomized-growth">Randomized Growth</h2>
-      <p>There are many ways to inject randomness into spanning tree generation. Here's the simplest way, represented as an algorithm:</p>
+      <p>Let's inject some randomness into our spanning tree generation. Here's the simplest way, represented as an algorithm:</p>
 
       <ol style="list-style-type: decimal">
         <li>Keep a list of possible path extensions, starting with just the entry point.</li>
@@ -155,10 +169,10 @@
         locally unpredictable, but globally regular behavior.</p>
 
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- BFS maze, B&W -->
       <canvas id="2" width="495px" height="495px"></canvas>
-      <p class="caption">A randomized growth maze, similar to BFS.</p>
+      <p class="caption">A randomized growth maze.</p>
     </div>
   </div>
 
@@ -166,12 +180,12 @@
 
     <div class="left-text">
 
-      <p>If we color the maze based on the path-distance of each segment from the starting point (&quot;the root&quot;), we can get a decent sense of the global structure of the maze:</p>
+      <p>If we color the maze based on the path-distance of each segment from the starting point (&quot;the root&quot;), we can get a decent sense of its global structure:</p>
 
       <p>Notice how the color gradient shifts evenly from the top left corner (the root), outward. This tells us that there aren't any crazy backtracking paths in the maze. But what if we wanted a maze that was more chaotic?</p>
 
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- BFS maze, Colored -->
       <canvas id="3" width="495px" height="495px"></canvas>
       <p class="caption">A randomized growth maze, colored by path-distance from the root.</p>
@@ -190,11 +204,13 @@
 
       <h2 id="weighted-randomness-prims-algorithm">Weighted Randomness &amp; Prim's Algorithm</h2>
 
-      <p>In our simple randomized growth algorithm, we used random selection from the set of candidate extensions to grow the maze. Because every node had a fresh chance in every drawing, the overall tendency was toward unbiased radial expansion outward from the root.</p>
+      <p>In our simple randomized growth algorithm, we used random selection from the set of candidate extensions to grow the maze. Because every node has a fresh chance in every drawing, the overall tendency is toward unbiased radial expansion outward from the root.</p>
 
       <p>We want to put the randomness into the <em>global structure</em> instead of just the local path expansion. We can do this by assigning every square on the grid a random weight, and then using Prim's algorithm to build our maze.</p>
 
-      <p><strong>Prim's algorithm</strong> is a method for building a minimum spanning tree. A minimum spanning tree is a spanning tree that's designed to choose the <em>least expensive</em> way of connecting all the tree's nodes, based on the cost of drawing any particular connection.</p> <p>Prim's accomplishes this by choosing the least expensive path extension at each cycle. Because each node has a fixed weight, if a node is generated with a high weight, it will be selected against in every successive round until it is the least expensive remaining node.</p>
+      <p><strong>Prim's algorithm</strong> is a method for building a minimum spanning tree. A minimum spanning tree is a spanning tree that's designed to choose the <em>least expensive</em> way of connecting all the tree's nodes, based on the cost of drawing any particular connection.</p>
+
+      <p>Prim's accomplishes this by always using the least expensive available path extension. Because each node has a fixed weight, if a node is generated with a high weight, it will be selected against in every successive round until it is the least expensive remaining node.</p>
 
       <p>For the most part, Prim's algorithm is identical to our earlier algorithm. We add an initial step before our old step 1,</p>
 
@@ -210,7 +226,7 @@
 
       <p>This approach produces mazes like the one seen here.</p>
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- Prim's maze, B&W -->
       <canvas id="4" width="495px" height="995px"></canvas>
       <p class="caption">A maze generated using randomized weight-assignment and Prim's algorithm.</p>
@@ -221,11 +237,13 @@
 
     <div class="left-text">
 
-      <p>Let's color it to get a better sense of the global structure. Notice that the randomized Prim's maze is much more complex, but that the local structure remains random. </p>
+      <p>Let's color the maze to get a better sense of its global structure.</p>
+
+      <p>Notice that the randomized Prim's maze is much more complex, but that the local structure remains random. </p>
 
       <p>This maze also constitutes a <em>good</em> maze from a straightforward design perspective: there are long, complex, blind alleys, and the path-distance of any given node is not easily predicted based on its position in the grid.</p>
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- Prim's maze, Colored -->
       <canvas id="5" width="495px" height="495px"></canvas>
       <p class="caption">A maze generated with Prim's algorithm, colored by path-distance from the root.</p>
@@ -246,7 +264,7 @@
 
       <p>A non-randomized depth-first growth maze looks like this:</p>
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- DFS non-maze, B&W -->
       <canvas id="6" width="495px" height="495px"></canvas>
       <p class="caption">Our simplest depth-first maze.</p>
@@ -261,7 +279,7 @@
       <p>In order to give our DFS maze some complexity, we choose randomly from the N most recently added elements in our list of possible path extensions.</p>
       <p>Let's set N to 4, since any given node can have at most four valid unincorporated neighbor nodes. And here's our maze:</p>
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- DFS maze, B&W -->
       <canvas id="7" width="495px" height="495px"></canvas>
       <p class="caption">A randomized depth-first maze.</p>
@@ -280,13 +298,13 @@
       <p>Speaking of solving mazes, let's do some of that!</p>
     </div>
     <div class="maze-double">
-      <div>
+      <div class="canvas-wrapper">
         <!-- DFS maze, Colorized -->
         <canvas id="8" width="495px" height="495px"></canvas>
         <p class="caption">Depth-first maze, colored by path distance from the root.</p>
       </div>
 
-      <div>
+      <div class="canvas-wrapper">
         <!-- BFS maze, Colorized -->
         <canvas id="9" width="495px" height="495px"></canvas>
         <p class="caption">Random expansion (breadth-first) maze, colored by path distance from the root.</p>
@@ -322,17 +340,17 @@
         <p>I have placed the root of each maze in the exact center to better show the behavior of the algorithm.</p>
       </div>
       <div class="maze-double">
-        <div>
+        <div class="canvas-wrapper">
           <!-- BFS maze, with DFS solver, root at center -->
           <canvas id="10" width="495px" height="495px"></canvas>
           <p class="caption">Breadth-first maze, solved by Depth First Search, root at center</p>
         </div>
-        <div>
+        <div class="canvas-wrapper">
           <!-- Prim's maze, with DFS solver, root at center -->
           <canvas id="11" width="495px" height="495px"></canvas>
           <p class="caption">Prim's maze, solved by Depth First Search, root at center</p>
         </div>
-        <div>
+        <div class="canvas-wrapper">
           <!-- DFS maze, with DFS solver, root at center -->
           <canvas id="12" width="495px" height="495px"></canvas>
           <p class="caption">Depth-first maze, solved by Depth First Search, root at center</p>
@@ -353,34 +371,27 @@
         </ol>
 
         <p>The result is the smooth radial expansion you see here.</p>
+
+        <p>Comparing BFS to DFS, we see that BFS is potentially much more expensive in terms of the number of nodes explored before finding the solution. This depends in part on the relative position of root and target within the maze.</p>
+        <p>If the path distance between root and target is small relative to the size of the maze, BFS (top) will tend to outperform DFS (bottom).</p>
       </div>
-      <div>
+      <div class="canvas-wrapper">
         <!-- BFS maze, BFS Solver, Root at center -->
         <canvas id="13" width="495px" height="495px"></canvas>
         <p class="caption">BFS solving a random expansion (breadth-first) maze, root at center.</p>
       </div>
     </div>
 
-
-
-
-
-    <div class="canvas-box-wrapper">
-      <div class="left-text">
-        <p>Comparing BFS to DFS, we see that BFS is potentially much more expensive in terms of the number of nodes explored before finding the solution. This depends in part on the relative position of root and target within the maze.</p>
-        <p>If the path distance between root and target is small relative to the size of the maze, BFS (top) will tend to outperform DFS (bottom).</p>
+    <div class="canvas-box-wrapper no-top">
+      <div class="canvas-wrapper" style="margin-left: 0;">
+        <!-- Prim's maze, BFS Solver, Root and Target near center -->
+        <canvas id="14" width="495px" height="495px"></canvas>
+        <p class="caption">BFS solving a Prim's maze, with root and target near center.</p>
       </div>
-      <div class="maze-double">
-        <div>
-          <!-- Prim's maze, BFS Solver, Root and Target near center -->
-          <canvas id="14" width="495px" height="495px"></canvas>
-          <p class="caption">BFS solving a Prim's maze, with root and target near center.</p>
-        </div>
-        <div>
-          <!-- Prim's maze, DFS Solver, Root and Target near center -->
-          <canvas id="15" width="495px" height="495px"></canvas>
-          <p class="caption">DFS solving a Prim's maze, with root and target near center.</p>
-        </div>
+      <div class="canvas-wrapper">
+        <!-- Prim's maze, DFS Solver, Root and Target near center -->
+        <canvas id="15" width="495px" height="495px"></canvas>
+        <p class="caption">DFS solving a Prim's maze, with root and target near center.</p>
       </div>
     </div>
 
@@ -390,9 +401,9 @@
   <div class="canvas-box-wrapper">
 
     <div class="left-text">
-      <p>Both methods have their weak spots, though. On the other hand, if the root and target are maximally distant from each other within the maze, BFS will have to explore the entire tree before finding the goal, while DFS goes straight for the fringes.</p>
+      <p>Both methods have their weak spots, though. If the root and target are maximally distant from each other within the maze, BFS will have to explore the entire tree before finding the goal, while DFS goes straight for the fringes.</p>
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- BFS maze, DFS Solver, Root at corner -->
       <canvas id="16" width="495px" height="495px"></canvas>
       <p class="caption">DFS solving a random-growth maze, maximum distance between root and target.</p>
@@ -437,7 +448,7 @@
 
       <p>So much for doing better!</p>
     </div>
-    <div>
+    <div class="canvas-wrapper">
       <!-- BFS maze, Dijkstra solver -->
       <canvas id="17" width="495px" height="495px"></canvas>
       <p class="caption">Dijkstra's algorithm solving a random-growth maze. Looks a lot like BFS!</p>
@@ -469,17 +480,17 @@
     </div>
 
     <div class="maze-double">
-      <div>
+      <div class="canvas-wrapper">
         <!-- BFS maze, A* solver, Root at center -->
         <canvas id="18" width="495px" height="495px"></canvas>
         <p class="caption">A* solving a random-growth maze, root at center.</p>
       </div>
-      <div>
+      <div class="canvas-wrapper">
         <!-- Prim's maze, A* solver, Root at center -->
         <canvas id="19" width="495px" height="495px"></canvas>
         <p class="caption">A* solving a Prim's maze, root at center.</p>
       </div>
-      <div>
+      <div class="canvas-wrapper">
         <!-- DFS maze, A* solver, Root at center -->
         <canvas id="20" width="495px" height="495px"></canvas>
         <p class="caption">A* solving a depth-first maze, root at center.</p>
@@ -494,15 +505,42 @@
 
   <p>Finally, to sum up, you can see all three of our solvers solving all three of our mazes at once!</p>
   <div class="final-recap">
-    <canvas id="21" width="495px" height="495px"></canvas>
-    <canvas id="22" width="495px" height="495px"></canvas>
-    <canvas id="23" width="495px" height="495px"></canvas>
-    <canvas id="24" width="495px" height="495px"></canvas>
-    <canvas id="25" width="495px" height="495px"></canvas>
-    <canvas id="26" width="495px" height="495px"></canvas>
-    <canvas id="27" width="495px" height="495px"></canvas>
-    <canvas id="28" width="495px" height="495px"></canvas>
-    <canvas id="29" width="495px" height="495px"></canvas>
+    <div class="canvas-wrapper">
+      <canvas id="23" width="495px" height="495px"></canvas>
+      <p class="caption">DFS solving a random-growth maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="21" width="495px" height="495px"></canvas>
+      <p class="caption">Prim's solving a random-growth maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="22" width="495px" height="495px"></canvas>
+      <p class="caption">A* solving a random-growth maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="24" width="495px" height="495px"></canvas>
+      <p class="caption">DFS solving a depth-first maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="25" width="495px" height="495px"></canvas>
+      <p class="caption">Prim's solving a depth-first maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="26" width="495px" height="495px"></canvas>
+      <p class="caption">A* solving a depth-first maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="27" width="495px" height="495px"></canvas>
+      <p class="caption">DFS solving a Prim's maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="28" width="495px" height="495px"></canvas>
+      <p class="caption">Prim's solving a Prim's maze.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <canvas id="29" width="495px" height="495px"></canvas>
+      <p class="caption">A* solving a Prim's maze.</p>
+    </div>
   </div>
 
 </body>
