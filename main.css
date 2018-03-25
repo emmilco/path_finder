@@ -11,6 +11,7 @@ body {
   font-family: 'Roboto', sans-serif;
   padding-bottom: 200px;
   padding-left: 10px;
+  padding-top: 100px;
 }
 
 p {
@@ -33,7 +34,7 @@ p {
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 25 0px;
-  margin-top: 250px;
+  margin-top: 100px;
 }
 
 .canvas-wrapper {
