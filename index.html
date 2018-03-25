@@ -282,7 +282,7 @@
         <p>The result is the smooth radial expansion you see here.</p>
 
         <p>Comparing BFS to DFS, we see that BFS is potentially much more expensive in terms of the number of nodes explored before finding the solution. This depends in part on the relative position of root and target within the maze.</p>
-        <p>If the path distance between root and target is small relative to the size of the maze, BFS (top) will tend to outperform DFS (bottom).</p>
+        <p>If the path distance between root and target is small relative to the size of the maze, BFS (left) will tend to outperform DFS (right). Run the demo a few times to get a sense for their relative performance!</p>
       </div>
       <div class="canvas-wrapper">
         <!-- BFS maze, BFS Solver, Root at center -->
@@ -292,7 +292,7 @@
     </div>
 
     <div class="canvas-box-wrapper no-top">
-      <div class="canvas-wrapper" style="margin-left: 0;">
+      <div class="canvas-wrapper no-left">
         <!-- Prim's maze, BFS Solver, Root and Target near center -->
         <canvas id="14" width="495px" height="495px"></canvas>
         <p class="caption">BFS solving a Prim's maze, with root and target near center.</p>
@@ -312,10 +312,19 @@
     <div class="left-text">
       <p>Both methods have their weak spots, though. If the root and target are maximally distant from each other within the maze, BFS will have to explore the entire tree before finding the goal, while DFS goes straight for the fringes.</p>
     </div>
-    <div class="canvas-wrapper">
+
+  </div>
+
+  <div class="canvas-box-wrapper no-top">
+    <div class="canvas-wrapper no-left">
       <!-- BFS maze, DFS Solver, Root at corner -->
       <canvas id="16" width="495px" height="495px"></canvas>
       <p class="caption">DFS solving a random-growth maze, maximum distance between root and target.</p>
+    </div>
+    <div class="canvas-wrapper">
+      <!-- BFS maze, BFS Solver, Root at corner -->
+      <canvas id="16a" width="495px" height="495px"></canvas>
+      <p class="caption">BFS solving a random-growth maze, maximum distance between root and target.</p>
     </div>
   </div>
 
@@ -342,20 +351,20 @@
   <div class="canvas-box-wrapper no-top">
 
     <div class="left-text">
-      <p>Dijkstra's proceeds like BFS, with changes to step 2:</p>
+      <p>In spanning trees like ours, Dijkstra's proceeds like BFS, with changes to step 2:</p>
 
-      <ul start="2" style="list-style-type: decimal">
+      <ol start="2" style="list-style-type: decimal">
         <li>Remove the minimum entry from the priority queue.</li>
-      </ul>
+      </ol>
 
       <p>and step 4:</p>
 
-      <ul start="4" style="list-style-type: decimal">
+      <ol start="4" style="list-style-type: decimal">
         <li>Insert each of the current node's children into the priority queue.</li>
-      </ul>
-      <p>So far so good. The only problem is that, because in reality our maze is an <em>unweighted</em> graph, there's actually no difference between the cost of exploring any one node and exploring any other. That means that our priority queue will honor a First-In, First-Out (FIFO) ordering principle, making Dijkstra's algorithm identical in execution to .... Breadth First Search. Behold:</p>
+      </ol>
+      <p>So far so good. The only problem is that, because in reality our maze is an <em>unweighted</em> graph, there's actually no difference between the cost of exploring any one node and exploring any other. That means that our priority queue will honor a First-In, First-Out (FIFO) ordering principle, making Dijkstra's algorithm identical in execution to Breadth First Search.</p>
 
-      <p>So much for doing better!</p>
+      <p>So much for doing better! Dijkstra's algorithm really shines in weighted graphs with cycles, not in our unweighted, spanning tree mazes.</p>
     </div>
     <div class="canvas-wrapper">
       <!-- BFS maze, Dijkstra solver -->

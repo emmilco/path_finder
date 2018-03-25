@@ -71,6 +71,10 @@ p {
   margin-top: 0;
 }
 
+.no-left {
+  margin-left: 0;
+}
+
 .caption {
   font-style: italic;
   font-size: 12px;

@@ -57,8 +57,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Prim's maze, DFS Solver, Root and Target near center
   maze("prims", [40,50], [100,100], "15", true, bfsSolver, "dfs", [50,40]);
 
-  // BFS maze, BFS Solver, Root at corner
+  // BFS maze, DFS Solver, Root at corner
   maze("bfs", [0,0], [100,100], "16", true, bfsSolver, "dfs", [98,98]);
+
+  // BFS maze, BFS Solver, Root at corner
+  maze("bfs", [0,0], [100,100], "16a", true, bfsSolver, "bfs", [98,98]);
 
   // BFS maze, Dijkstra solver
   maze("bfs", [0,0], [100,100], "17", true, bfsSolver, "bfs", [98,98]);

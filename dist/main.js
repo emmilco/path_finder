@@ -201,8 +201,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Prim's maze, DFS Solver, Root and Target near center
   (0, _maze_generator2.default)("prims", [40, 50], [100, 100], "15", true, _bfs_solver2.default, "dfs", [50, 40]);
 
-  // BFS maze, BFS Solver, Root at corner
+  // BFS maze, DFS Solver, Root at corner
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "16", true, _bfs_solver2.default, "dfs", [98, 98]);
+
+  // BFS maze, BFS Solver, Root at corner
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "16a", true, _bfs_solver2.default, "bfs", [98, 98]);
 
   // BFS maze, Dijkstra solver
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "17", true, _bfs_solver2.default, "bfs", [98, 98]);
