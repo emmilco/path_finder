@@ -333,16 +333,8 @@
 
   <div class="canvas-box-wrapper">
     <div class='left-text'>
-    <h2 id="dijkstras-algorithm">Dijkstra's Algorithm</h2>
+      <h2 id="dijkstras-algorithm">Dijkstra's Algorithm</h2>
 
-    <p>DFS and BFS are cool, and they're both guaranteed to find solutions under normal conditions (e.g. provided our maze is finite and our target is reachable). But they're not very smart. As we've seen above, both algorithms are agnostic about the structure
-      of the maze and the probability of success searching along any given trajectory. We can do better!</p>
-
-    <p>When we wanted to improve the structure of our generated maze, we used randomized weighting and Prim's algorithm. In order to build a smart maze solver, we're going to take a similar approach. In this case we will use a heuristic-guided improvement
-      on Dijkstra's algorithm called A* (&quot;A-Star&quot;).</p>
-
-    <p><strong>Dijkstra's Algorithm</strong> is a path-finding method that prioritizes the least-expensive available node in our search queue. Typically we implement this using a <strong>min-heap priority queue</strong>, which is a <em>very speedy</em> data
-      structure for maintaining a list in which the first element is guaranteed to have the minimum value in the entire list. (Note, our implementation of Prim's above uses a priority queue like this too!)</p>
     </div>
   </div>
 
@@ -351,6 +343,17 @@
   <div class="canvas-box-wrapper no-top">
 
     <div class="left-text">
+
+      <p>DFS and BFS are cool, and they're both guaranteed to find solutions under normal conditions (e.g. provided our maze is finite and our target is reachable). But they're not very smart. As we've seen above, both algorithms are agnostic about the structure
+        of the maze and the probability of success searching along any given trajectory. We can do better!</p>
+
+
+      <p>When we wanted to improve the structure of our generated maze, we used randomized weighting and Prim's algorithm. In order to build a smart maze solver, we're going to take a similar approach. In this case we will use a heuristic-guided improvement
+        on Dijkstra's algorithm called A* (&quot;A-Star&quot;).</p>
+
+      <p><strong>Dijkstra's Algorithm</strong> is a path-finding method that prioritizes the least-expensive available node in our search queue. Typically we implement this using a <strong>min-heap priority queue</strong>, which is a <em>very speedy</em> data
+        structure for maintaining a list in which the first element is guaranteed to have the minimum value in the entire list. (Note, our implementation of Prim's above uses a priority queue like this too!)</p>
+
       <p>In spanning trees like ours, Dijkstra's proceeds like BFS, with changes to step 2:</p>
 
       <ol start="2" style="list-style-type: decimal">
@@ -368,7 +371,7 @@
     </div>
     <div class="canvas-wrapper">
       <!-- BFS maze, Dijkstra solver -->
-      <canvas id="17" width="495px" height="495px"></canvas>
+      <canvas id="17" width="495px" height="995px"></canvas>
       <p class="caption">Dijkstra's algorithm solving a random-growth maze. Looks a lot like BFS!</p>
     </div>
 

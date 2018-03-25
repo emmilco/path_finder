@@ -3,7 +3,8 @@ import canvasSearchDraw from '../util/canvas_search_draw';
 import canvasFoundDraw from '../util/canvas_found_draw';
 
 class aStarSolver {
-  constructor(rootCoords, grid, ctx, target){
+  constructor(rootCoords, grid, ctx, target, method){
+    this.method = method;
     this.ctx = ctx;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
@@ -23,6 +24,7 @@ class aStarSolver {
   }
 
   heuristic(current){
+    if (this.method === "dijkstra") return 0;
     const dx = Math.abs(current[0] - this.targetCoords[0]);
     const dy = Math.abs(current[1] - this.targetCoords[1]);
     // return dx + dy;
@@ -77,8 +79,8 @@ class aStarSolver {
   }
 }
 
-const aStar = (root, grid, ctx, target) => {
-  new aStarSolver(root, grid, ctx, target).search();
+const aStar = (root, grid, ctx, target, method) => {
+  new aStarSolver(root, grid, ctx, target, method).search();
 };
 
 

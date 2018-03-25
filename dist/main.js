@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "16a", true, _bfs_solver2.default, "bfs", [98, 98]);
 
   // BFS maze, Dijkstra solver
-  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "17", true, _bfs_solver2.default, "bfs", [98, 98]);
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 200], "17", true, _a_star_solver2.default, "dijkstra", [98, 198]);
 
   // BFS maze, A* solver, Root at center
   (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "18", true, _a_star_solver2.default, null, [98, 98]);
@@ -644,11 +644,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var aStarSolver = function () {
-  function aStarSolver(rootCoords, grid, ctx, target) {
+  function aStarSolver(rootCoords, grid, ctx, target, method) {
     var _this = this;
 
     _classCallCheck(this, aStarSolver);
 
+    this.method = method;
     this.ctx = ctx;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
@@ -670,6 +671,7 @@ var aStarSolver = function () {
   _createClass(aStarSolver, [{
     key: 'heuristic',
     value: function heuristic(current) {
+      if (this.method === "dijkstra") return 0;
       var dx = Math.abs(current[0] - this.targetCoords[0]);
       var dy = Math.abs(current[1] - this.targetCoords[1]);
       // return dx + dy;
@@ -735,8 +737,8 @@ var aStarSolver = function () {
   return aStarSolver;
 }();
 
-var aStar = function aStar(root, grid, ctx, target) {
-  new aStarSolver(root, grid, ctx, target).search();
+var aStar = function aStar(root, grid, ctx, target, method) {
+  new aStarSolver(root, grid, ctx, target, method).search();
 };
 
 exports.default = aStar;
