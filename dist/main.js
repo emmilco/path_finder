@@ -96,11 +96,13 @@ var Node = function () {
   _createClass(Node, [{
     key: "distance",
     value: function distance() {
+      if (this.depth) return this.depth;
       if (this.parent) {
-        return this.parent.distance() + 1;
+        this.depth = this.parent.distance() + 1;
       } else {
-        return 0;
+        this.depth = 0;
       }
+      return this.depth;
     }
   }, {
     key: "edgeToParent",
@@ -149,6 +151,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 document.addEventListener("DOMContentLoaded", function () {
 
   // bfsMazeGenerator(type, root, gridDims, canvasId, color, solver, method, target)
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 200], "0", true, _a_star_solver2.default, null, [98, 198]);
+
+  // <!-- Prims headliner-maze, color, A* solver -->
+  (0, _maze_generator2.default)("bfsNonMaze", [0, 0], [100, 100], "1", false);
 
   // <!-- BFS non-maze, B&W -->
   (0, _maze_generator2.default)("bfsNonMaze", [0, 0], [100, 100], "1", false);
@@ -649,7 +655,7 @@ var aStarSolver = function () {
     this.candidates = new _priority_queue2.default(function (a, b) {
       if (_this.fScore[a.coords] < _this.fScore[b.coords]) return -1;
     });
-    this.candidates.insert(this.rootNode);
+    this.candidates.push(this.rootNode);
     this.gScore = _defineProperty({}, this.rootCoords, 0);
     this.fScore = {};
     this.fScore[this.rootCoords] = this.heuristic(this.rootNode, this.targetCoords);
@@ -664,6 +670,7 @@ var aStarSolver = function () {
       var dx = Math.abs(current[0] - this.targetCoords[0]);
       var dy = Math.abs(current[1] - this.targetCoords[1]);
       return dx + dy;
+      // return Math.sqrt(dx*dx + dy*dy);
     }
   }, {
     key: 'search',
@@ -671,7 +678,7 @@ var aStarSolver = function () {
       var _this2 = this;
 
       if (this.candidates.isEmpty()) return -1;
-      var active = this.candidates.removeMin();
+      var active = this.candidates.pop();
       this.explored++;
       var ctx = this.ctx;
       if (active.parent) {
@@ -688,7 +695,7 @@ var aStarSolver = function () {
       this.examined[active.coords] = true;
       active.children.forEach(function (child) {
         if (!_this2.examined[child.coords]) {
-          _this2.candidates.insert(child);
+          _this2.candidates.push(child);
           _this2.gScore[child.coords] = Infinity;
         } else {
           return;
@@ -752,7 +759,7 @@ var PriorityQueue = function () {
   function PriorityQueue(comparator) {
     _classCallCheck(this, PriorityQueue);
 
-    this.size = 0;
+    this.length = 0;
     this.heap = [null];
     this.comparator = comparator;
   }
@@ -760,28 +767,28 @@ var PriorityQueue = function () {
   _createClass(PriorityQueue, [{
     key: "isEmpty",
     value: function isEmpty() {
-      return this.size === 0;
+      return this.length === 0;
     }
   }, {
-    key: "insert",
-    value: function insert(key) {
+    key: "push",
+    value: function push(key) {
       this.heap.push(key);
-      this.swim(++this.size);
+      this.swim(++this.length);
     }
   }, {
-    key: "removeMin",
-    value: function removeMin(key) {
+    key: "pop",
+    value: function pop(key) {
       var min = this.heap[1];
-      this.exchange(1, this.size);
+      this.exchange(1, this.length);
       this.heap.pop();
-      this.size--;
+      this.length--;
       this.sink(1);
       return min;
     }
   }, {
     key: "less",
     value: function less(i, j) {
-      return this.comparator(this.heap[i], this.heap[j]) === -1;
+      return this.comparator(this.heap[i], this.heap[j]) < 0;
     }
   }, {
     key: "exchange",
@@ -801,11 +808,11 @@ var PriorityQueue = function () {
   }, {
     key: "sink",
     value: function sink(k) {
-      while (2 * k <= this.size) {
+      while (2 * k <= this.length) {
         // j is k's first child
         var j = 2 * k;
         // choose the lesser of k's children
-        if (j < this.size && this.less(j + 1, j)) j++;
+        if (j < this.length && this.less(j + 1, j)) j++;
         // if k is not greater than its least child, k is in place
         if (!this.less(j, k)) break;
         // make k the child, j the parent
@@ -841,6 +848,10 @@ var _grid = __webpack_require__(2);
 
 var _grid2 = _interopRequireDefault(_grid);
 
+var _priority_queue = __webpack_require__(16);
+
+var _priority_queue2 = _interopRequireDefault(_priority_queue);
+
 var _canvas_draw = __webpack_require__(4);
 
 var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
@@ -861,9 +872,16 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
   var drawMethod = color ? _canvas_draw2.default : _canvas_search_draw2.default;
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  var candidates = [];
   var maxDepth = 0;
   grid.root = root;
+  var candidates = void 0;
+  if (type === "prims") {
+    candidates = new _priority_queue2.default(function (a, b) {
+      return b.value - a.value;
+    });
+  } else {
+    candidates = [];
+  }
   candidates.push(grid.array[root[0]][root[1]]);
 
   var traversalStep = function traversalStep() {
@@ -882,15 +900,10 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
       case "dfs":
         active = candidates.splice(candidates.length - Math.floor(Math.random() * 3 + 1), 1)[0];
         break;
-      case "prims":
-        candidates.sort(function (a, b) {
-          return b.value - a.value;
-        });
-        active = candidates.pop();
-        break;
       case "bfsNonMaze":
         active = candidates.shift();
         break;
+      case "prims":
       case "dfsNonMaze":
         active = candidates.pop();
         break;

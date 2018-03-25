@@ -23,11 +23,13 @@ class Node {
   }
 
   distance(){
+    if (this.depth) return this.depth;
     if (this.parent){
-      return this.parent.distance() + 1;
+      this.depth = this.parent.distance() + 1;
     } else {
-      return 0;
+      this.depth = 0;
     }
+    return this.depth;
   }
 
   edgeToParent(){

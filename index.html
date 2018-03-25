@@ -20,7 +20,6 @@
 
       p {
         font-size: 16px;
-        width: 60%;
       }
       .enclosure {
         display: flex;
@@ -30,17 +29,26 @@
         width: 70%;
         margin: 0 auto;
       }
+      .final-recap canvas {
+        width: 30%;
+      }
+      .canvas-box-wrapper {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .canvas-box-wrapper canvas {
+        width: 40%;
+        margin-left: 30px;
+        margin-top: 120px;
+      }
     </style>
   </head>
   <body style=" background: white;">
-    <h1 id="making-mazes">Making Mazes</h1>
-    <h2 id="perfect-and-imperfect-mazes">Perfect and Imperfect Mazes</h2>
-
-      <p>There are two kinds of mazes. Some mazes contain loops, making it possible for explorers to visit to the same point twice without retracing their steps. Other, so called <strong>&quot;perfect&quot;</strong> mazes, contain no loops.</p>
-
-      <p>Because they contain no loops or cyclical paths, perfect mazes have some interesting properties. For one, they can be represented as <strong>trees</strong>. Pick <em>any point</em> in a perfect maze, and every other part of the maze will be somewhere on a branch that originates at that point. (Take a second to think about that—it's pretty crazy.)</p>
-
-      <p>Another neat thing about perfect mazes: if point A is reachable from point B, they are connected by a unique path. In other words, if you want to get from A to B in a perfect maze, there is at most one way to get there.</p>
+  <div class="canvas-box-wrapper">
+    <canvas id="0" width="495px" height="995px"></canvas>
+    <div class="left-text"><h1 id="making-mazes">Making Mazes</h1>
 
     <h2 id="spanning-trees-and-maze-design">Spanning Trees and Maze Design</h2>
 
@@ -55,6 +63,9 @@
       <p>A <strong>spanning tree</strong> is a kind of network. It follows two simple rules: (1) Every available point must be connected to the network, and (2) no point can be connected to itself. Total coverage, no cycles.</p>
 
       <p>Spanning trees can be generated in many ways. Since points in a two-dimensional plane each have four neighbors, the easiest way to generate a spanning tree is to radiate outward from the origin, connecting each point to all of its unconnected neighbors, until the whole space is full.</p>
+    </div>
+    </div>
+
 
     <!-- BFS non-maze, B&W -->
     <canvas id="1" width="495px" height="495px"></canvas>
@@ -245,16 +256,17 @@
       <p>As with DFS I have placed the root of the maze at the center, to better illustrate the behavior of the algorithm. You can see that when a relatively direct path is available, A* tends to find it, and quickly. A* also has an advantage when the root and target are close together, relative to the size of the graph. A* doesn't always outperform DFS (or even BFS—intuition can lead us astray!), but it is about as good in the worst case, and better on average.</p>
 
       <p>Finally, to sum up, you can see all three of our solvers solving all three of our mazes at once!</p>
-
-    <canvas id="21" width="495px" height="495px"></canvas>
-    <canvas id="22" width="495px" height="495px"></canvas>
-    <canvas id="23" width="495px" height="495px"></canvas>
-    <canvas id="24" width="495px" height="495px"></canvas>
-    <canvas id="25" width="495px" height="495px"></canvas>
-    <canvas id="26" width="495px" height="495px"></canvas>
-    <canvas id="27" width="495px" height="495px"></canvas>
-    <canvas id="28" width="495px" height="495px"></canvas>
-    <canvas id="29" width="495px" height="495px"></canvas>
+    <div class="final-recap">
+      <canvas id="21" width="495px" height="495px"></canvas>
+      <canvas id="22" width="495px" height="495px"></canvas>
+      <canvas id="23" width="495px" height="495px"></canvas>
+      <canvas id="24" width="495px" height="495px"></canvas>
+      <canvas id="25" width="495px" height="495px"></canvas>
+      <canvas id="26" width="495px" height="495px"></canvas>
+      <canvas id="27" width="495px" height="495px"></canvas>
+      <canvas id="28" width="495px" height="495px"></canvas>
+      <canvas id="29" width="495px" height="495px"></canvas>
+    </div>
 
   </body>
 </html>

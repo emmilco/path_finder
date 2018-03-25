@@ -2,31 +2,31 @@
 
 class PriorityQueue {
   constructor(comparator){
-    this.size = 0;
+    this.length = 0;
     this.heap = [null];
     this.comparator = comparator;
   }
 
   isEmpty(){
-    return this.size === 0;
+    return this.length === 0;
   }
 
-  insert(key){
+  push(key){
     this.heap.push(key);
-    this.swim(++this.size);
+    this.swim(++this.length);
   }
 
-  removeMin(key){
+  pop(key){
     const min = this.heap[1];
-    this.exchange(1, this.size);
+    this.exchange(1, this.length);
     this.heap.pop();
-    this.size--;
+    this.length--;
     this.sink(1);
     return min;
   }
 
   less(i, j){
-    return this.comparator(this.heap[i], this.heap[j]) === -1;
+    return this.comparator(this.heap[i], this.heap[j]) < 0;
   }
 
   exchange(i, j){
@@ -41,11 +41,11 @@ class PriorityQueue {
   }
 
   sink(k){
-    while(2*k <= this.size){
+    while(2*k <= this.length){
       // j is k's first child
       let j = 2*k;
       // choose the lesser of k's children
-      if (j < this.size && this.less(j+1, j)) j++;
+      if (j < this.length && this.less(j+1, j)) j++;
       // if k is not greater than its least child, k is in place
       if (!this.less(j, k)) break;
       // make k the child, j the parent

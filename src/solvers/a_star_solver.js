@@ -13,7 +13,7 @@ class aStarSolver {
     this.candidates = new PriorityQueue((a,b) => {
       if (this.fScore[a.coords] < this.fScore[b.coords]) return -1;
     });
-    this.candidates.insert(this.rootNode);
+    this.candidates.push(this.rootNode);
     this.gScore = {[this.rootCoords]: 0};
     this.fScore = {};
     this.fScore[this.rootCoords] = this.heuristic(this.rootNode, this.targetCoords);
@@ -26,11 +26,13 @@ class aStarSolver {
     const dx = Math.abs(current[0] - this.targetCoords[0]);
     const dy = Math.abs(current[1] - this.targetCoords[1]);
     return dx + dy;
+    // return Math.sqrt(dx*dx + dy*dy);
+
   }
 
   search() {
     if (this.candidates.isEmpty()) return -1;
-    const active = this.candidates.removeMin();
+    const active = this.candidates.pop();
     this.explored++;
     const ctx = this.ctx;
     if (active.parent){
@@ -47,7 +49,7 @@ class aStarSolver {
     this.examined[active.coords] = true;
     active.children.forEach((child) => {
       if(!this.examined[child.coords]){
-        this.candidates.insert(child);
+        this.candidates.push(child);
         this.gScore[child.coords] = Infinity;
       } else {
         return;

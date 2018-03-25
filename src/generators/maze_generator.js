@@ -1,5 +1,6 @@
 import Node from '../components/node';
 import Grid from '../components/grid';
+import PriorityQueue from '../components/priority_queue';
 import canvasDraw from '../util/canvas_draw';
 import canvasSearchDraw from '../util/canvas_search_draw';
 
@@ -9,9 +10,14 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
   const drawMethod = (color ? canvasDraw : canvasSearchDraw);
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const candidates = [];
   let maxDepth = 0;
   grid.root = root;
+  let candidates;
+  if (type === "prims") {
+    candidates = new PriorityQueue((a,b) => b.value - a.value);
+  } else {
+    candidates = [];
+  }
   candidates.push(grid.array[root[0]][root[1]]);
 
   const traversalStep = () => {
@@ -34,13 +40,10 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
         candidates.length - Math.floor(Math.random()*3+1), 1
       )[0];
       break;
-    case "prims":
-      candidates.sort((a,b) => { return b.value - a.value; });
-      active = candidates.pop();
-      break;
     case "bfsNonMaze":
       active = candidates.shift();
       break;
+    case "prims":
     case "dfsNonMaze":
       active = candidates.pop();
       break;
