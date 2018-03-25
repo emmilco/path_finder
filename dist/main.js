@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
   (0, _maze_generator2.default)("dfs", [50, 50], [100, 100], "12", true, _bfs_solver2.default, "dfs", [98, 98]);
 
   // <!-- Prim's maze, BFS Solver, Root at center -->
-  (0, _maze_generator2.default)("prims", [50, 50], [100, 100], "13", true, _bfs_solver2.default, "bfs", [98, 98]);
+  (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "13", true, _bfs_solver2.default, "bfs", [98, 98]);
 
   // <!-- Prim's maze, BFS Solver, Root and Target near center -->
   (0, _maze_generator2.default)("prims", [40, 50], [100, 100], "14", true, _bfs_solver2.default, "bfs", [50, 40]);
@@ -209,6 +209,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // <!-- DFS maze, A* solver, Root at center -->
   (0, _maze_generator2.default)("dfs", [50, 50], [100, 100], "20", true, _a_star_solver2.default, null, [98, 98]);
+
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "21", true, _bfs_solver2.default, "dfs", [98, 98]);
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "22", true, _bfs_solver2.default, "bfs", [98, 98]);
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "23", true, _a_star_solver2.default, null, [98, 98]);
+  (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "24", true, _bfs_solver2.default, "dfs", [98, 98]);
+  (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "25", true, _bfs_solver2.default, "bfs", [98, 98]);
+  (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "26", true, _a_star_solver2.default, null, [98, 98]);
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "27", true, _bfs_solver2.default, "dfs", [98, 98]);
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "28", true, _bfs_solver2.default, "bfs", [98, 98]);
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "29", true, _a_star_solver2.default, null, [98, 98]);
 });
 
 /***/ }),
@@ -484,6 +494,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function bfsSolver(rootCoords, grid, ctx, target, method) {
   var root = rootCoords;
+  var targetNode = grid.array[target[0]][target[1]];
   var candidates = [];
   var explored = 0;
   candidates.push(grid.array[root[0]][root[1]]);
@@ -496,7 +507,7 @@ function bfsSolver(rootCoords, grid, ctx, target, method) {
     } else {
       active = candidates.shift();
     }
-    explored += 1;
+    explored++;
     (0, _canvas_search_draw2.default)(active, ctx);
     if (active.parent) {
       var edge = active.edgeToParent();
@@ -504,6 +515,7 @@ function bfsSolver(rootCoords, grid, ctx, target, method) {
       (0, _canvas_search_draw2.default)(edgeNode, ctx);
     }
     if (active.x === target[0] && active.y === target[1]) {
+      console.log(method + ' ' + explored / targetNode.distance());
       markPathTo(active, grid, ctx);
       return;
     }
@@ -631,7 +643,6 @@ var aStarSolver = function () {
     this.ctx = ctx;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
-    // this.targetCoords = [grid.height - 2, grid.width - 2];
     this.targetCoords = target;
     this.examined = {};
     this.cameFrom = {};
@@ -643,13 +654,13 @@ var aStarSolver = function () {
     this.fScore = {};
     this.fScore[this.rootCoords] = this.heuristic(this.rootNode, this.targetCoords);
     this.grid = grid;
+    this.targetNode = grid.array[target[0]][target[1]];
     this.explored = 0;
   }
 
   _createClass(aStarSolver, [{
     key: 'heuristic',
     value: function heuristic(current) {
-      // NOTE: using diagonal distance because of generator characteristics
       var dx = Math.abs(current[0] - this.targetCoords[0]);
       var dy = Math.abs(current[1] - this.targetCoords[1]);
       return dx + dy;
@@ -661,6 +672,7 @@ var aStarSolver = function () {
 
       if (this.candidates.isEmpty()) return -1;
       var active = this.candidates.removeMin();
+      this.explored++;
       var ctx = this.ctx;
       if (active.parent) {
         var edge = active.edgeToParent();
@@ -670,6 +682,7 @@ var aStarSolver = function () {
       (0, _canvas_search_draw2.default)(active, ctx);
 
       if (active.coords.toString() === this.targetCoords.toString()) {
+        console.log('a* ' + this.explored / this.targetNode.distance());
         return this.reconstructPath(active, ctx);
       }
       this.examined[active.coords] = true;
@@ -849,11 +862,13 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
   var ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   var candidates = [];
+  var maxDepth = 0;
   grid.root = root;
   candidates.push(grid.array[root[0]][root[1]]);
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) {
+      console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);
       return;
@@ -882,6 +897,8 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
     }
 
     active.type = "path";
+    var distance = active.distance();
+    if (distance > maxDepth) maxDepth = distance;
     if (active.parent) {
       var edge = active.edgeToParent();
       var edgeNode = grid.array[edge[0]][edge[1]];

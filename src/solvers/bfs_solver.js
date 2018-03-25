@@ -4,6 +4,7 @@ import canvasFoundDraw from '../util/canvas_found_draw';
 
 function bfsSolver (rootCoords, grid, ctx, target, method) {
   const root = rootCoords;
+  const targetNode = grid.array[target[0]][target[1]];
   const candidates = [];
   let explored = 0;
   candidates.push(grid.array[root[0]][root[1]]);
@@ -16,7 +17,7 @@ function bfsSolver (rootCoords, grid, ctx, target, method) {
     } else {
       active = candidates.shift();
     }
-    explored += 1;
+    explored++;
     canvasSearchDraw(active, ctx);
     if (active.parent){
       let edge = active.edgeToParent();
@@ -24,6 +25,7 @@ function bfsSolver (rootCoords, grid, ctx, target, method) {
       canvasSearchDraw(edgeNode, ctx);
     }
     if (active.x === target[0] && active.y === target[1]) {
+      console.log(`${method} ${explored / targetNode.distance()}`);
       markPathTo(active, grid, ctx);
       return;
     }

@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   maze("dfs", [50,50], [100,100], "12", true, bfsSolver, "dfs", [98,98]);
 
   // <!-- Prim's maze, BFS Solver, Root at center -->
-  maze("prims", [50,50], [100,100], "13", true, bfsSolver, "bfs", [98,98]);
+  maze("bfs", [50,50], [100,100], "13", true, bfsSolver, "bfs", [98,98]);
 
   // <!-- Prim's maze, BFS Solver, Root and Target near center -->
   maze("prims", [40,50], [100,100], "14", true, bfsSolver, "bfs", [50,40]);
@@ -67,5 +67,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // <!-- DFS maze, A* solver, Root at center -->
   maze("dfs", [50,50], [100,100], "20", true, aStar, null, [98,98]);
+
+  maze("bfs", [0,0], [100,100], "21", true, bfsSolver, "dfs", [98,98]);
+  maze("bfs", [0,0], [100,100], "22", true, bfsSolver, "bfs", [98,98]);
+  maze("bfs", [0,0], [100,100], "23", true, aStar, null, [98,98]);
+  maze("dfs", [0,0], [100,100], "24", true, bfsSolver, "dfs", [98,98]);
+  maze("dfs", [0,0], [100,100], "25", true, bfsSolver, "bfs", [98,98]);
+  maze("dfs", [0,0], [100,100], "26", true, aStar, null, [98,98]);
+  maze("prims", [0,0], [100,100], "27", true, bfsSolver, "dfs", [98,98]);
+  maze("prims", [0,0], [100,100], "28", true, bfsSolver, "bfs", [98,98]);
+  maze("prims", [0,0], [100,100], "29", true, aStar, null, [98,98]);
+
 
 });

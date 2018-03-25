@@ -42,7 +42,7 @@ This approach produces mazes like the one seen below.
 
 <bfs maze, b&w>
 
-The maze grows evenly and organically to fill the space.  Each next path extension may be randomly chosen, but all the available extensions have the same random chance of being chosen. This way of structuring our randomness produces locally unpredictable, but globally regular behavior.
+The maze grows evenly and organically to fill the space.  Each next path extension may be randomly chosen, but all the available extensions have the same chance of being chosen in any given round. This way of structuring our randomness produces locally unpredictable, but globally regular behavior.
 
 If we color the maze based on the path-distance of each segment from the starting point ("the root"), we can get a decent sense of the global structure of the maze:
 

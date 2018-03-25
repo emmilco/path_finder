@@ -10,11 +10,13 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const candidates = [];
+  let maxDepth = 0;
   grid.root = root;
   candidates.push(grid.array[root[0]][root[1]]);
 
   const traversalStep = () => {
     if (candidates.length === 0) {
+      console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);
       return;
@@ -45,6 +47,8 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
     }
 
     active.type = "path";
+    const distance = active.distance();
+    if (distance > maxDepth) maxDepth = distance;
     if (active.parent){
       let edge = active.edgeToParent();
       let edgeNode = grid.array[edge[0]][edge[1]];

@@ -7,7 +7,6 @@ class aStarSolver {
     this.ctx = ctx;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
-    // this.targetCoords = [grid.height - 2, grid.width - 2];
     this.targetCoords = target;
     this.examined = {};
     this.cameFrom = {};
@@ -19,11 +18,11 @@ class aStarSolver {
     this.fScore = {};
     this.fScore[this.rootCoords] = this.heuristic(this.rootNode, this.targetCoords);
     this.grid = grid;
+    this.targetNode = grid.array[target[0]][target[1]];
     this.explored = 0;
   }
 
   heuristic(current){
-    // NOTE: using diagonal distance because of generator characteristics
     const dx = Math.abs(current[0] - this.targetCoords[0]);
     const dy = Math.abs(current[1] - this.targetCoords[1]);
     return dx + dy;
@@ -32,6 +31,7 @@ class aStarSolver {
   search() {
     if (this.candidates.isEmpty()) return -1;
     const active = this.candidates.removeMin();
+    this.explored++;
     const ctx = this.ctx;
     if (active.parent){
       let edge = active.edgeToParent();
@@ -41,6 +41,7 @@ class aStarSolver {
     canvasSearchDraw(active, ctx);
 
     if (active.coords.toString() === this.targetCoords.toString()) {
+      console.log(`a* ${this.explored / this.targetNode.distance()}`);
       return this.reconstructPath(active, ctx);
     }
     this.examined[active.coords] = true;
