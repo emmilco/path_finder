@@ -124,14 +124,6 @@ exports.default = Node;
 "use strict";
 
 
-var _grid = __webpack_require__(2);
-
-var _grid2 = _interopRequireDefault(_grid);
-
-var _node = __webpack_require__(0);
-
-var _node2 = _interopRequireDefault(_node);
-
 var _bfs_flood = __webpack_require__(5);
 
 var _bfs_flood2 = _interopRequireDefault(_bfs_flood);
@@ -140,21 +132,9 @@ var _bfs_random_flood = __webpack_require__(8);
 
 var _bfs_random_flood2 = _interopRequireDefault(_bfs_random_flood);
 
-var _bfs_maze_generator = __webpack_require__(9);
+var _maze_generator = __webpack_require__(18);
 
-var _bfs_maze_generator2 = _interopRequireDefault(_bfs_maze_generator);
-
-var _bfs_non_maze_generator = __webpack_require__(17);
-
-var _bfs_non_maze_generator2 = _interopRequireDefault(_bfs_non_maze_generator);
-
-var _prims_maze_generator = __webpack_require__(10);
-
-var _prims_maze_generator2 = _interopRequireDefault(_prims_maze_generator);
-
-var _dfs_maze_generator = __webpack_require__(11);
-
-var _dfs_maze_generator2 = _interopRequireDefault(_dfs_maze_generator);
+var _maze_generator2 = _interopRequireDefault(_maze_generator);
 
 var _bfs_solver = __webpack_require__(12);
 
@@ -167,53 +147,68 @@ var _a_star_solver2 = _interopRequireDefault(_a_star_solver);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 document.addEventListener("DOMContentLoaded", function () {
-  var root = [30, 30];
-  var target = [20, 20];
-  var grid1 = new _grid2.default(100, 100);
-  var grid2 = new _grid2.default(100, 100);
-  var grid3 = new _grid2.default(100, 100);
-  (0, _bfs_non_maze_generator2.default)(root, grid1, "1");
-  (0, _bfs_maze_generator2.default)(root, grid2, "2");
-  (0, _bfs_maze_generator2.default)(root, grid3, "3");
-  window.setTimeout(function () {
-    return (0, _bfs_solver2.default)(root, grid1, "bfs", "1", target);
-  }, 15000);
-  window.setTimeout(function () {
-    return (0, _bfs_solver2.default)(root, grid2, "dfs", "2", target);
-  }, 15000);
-  window.setTimeout(function () {
-    return new _a_star_solver2.default(root, grid3, "3", target).search();
-  }, 15000);
-  var grid4 = new _grid2.default(100, 100);
-  var grid5 = new _grid2.default(100, 100);
-  var grid6 = new _grid2.default(100, 100);
-  (0, _prims_maze_generator2.default)(root, grid4, "4");
-  (0, _prims_maze_generator2.default)(root, grid5, "5");
-  (0, _prims_maze_generator2.default)(root, grid6, "6");
-  window.setTimeout(function () {
-    return (0, _bfs_solver2.default)(root, grid4, "bfs", "4", target);
-  }, 15000);
-  window.setTimeout(function () {
-    return (0, _bfs_solver2.default)(root, grid5, "dfs", "5", target);
-  }, 15000);
-  window.setTimeout(function () {
-    return new _a_star_solver2.default(root, grid6, "6", target).search();
-  }, 15000);
-  var grid7 = new _grid2.default(100, 100);
-  var grid8 = new _grid2.default(100, 100);
-  var grid9 = new _grid2.default(100, 100);
-  (0, _dfs_maze_generator2.default)(root, grid7, "7");
-  (0, _dfs_maze_generator2.default)(root, grid8, "8");
-  (0, _dfs_maze_generator2.default)(root, grid9, "9");
-  window.setTimeout(function () {
-    return (0, _bfs_solver2.default)(root, grid7, "bfs", "7", target);
-  }, 15000);
-  window.setTimeout(function () {
-    return (0, _bfs_solver2.default)(root, grid8, "dfs", "8", target);
-  }, 15000);
-  window.setTimeout(function () {
-    return new _a_star_solver2.default(root, grid9, "9", target).search();
-  }, 15000);
+
+  // bfsMazeGenerator(type, root, gridDims, canvasId, color, solver, method, target)
+
+  // <!-- BFS non-maze, B&W -->
+  (0, _maze_generator2.default)("bfsNonMaze", [0, 0], [100, 100], "1", false);
+
+  // <!-- BFS maze, B&W -->
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "2", false);
+
+  // <!-- BFS maze, Colored -->
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "3", true);
+
+  // <!-- Prim's maze, B&W -->
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "4", false);
+
+  // <!-- Prim's maze, Colored -->
+  (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "5", true);
+
+  // <!-- DFS non-maze, B&W -->
+  (0, _maze_generator2.default)("dfsNonMaze", [0, 0], [100, 100], "6", false);
+
+  // <!-- DFS maze, B&W -->
+  (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "7", false);
+
+  // <!-- BFS maze, Colorized -->
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "8", true);
+
+  // <!-- DFS maze, Colorized -->
+  (0, _maze_generator2.default)("dfs", [0, 0], [100, 100], "9", true);
+
+  // <!-- BFS maze, with DFS solver, root at center -->
+  (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "10", true, _bfs_solver2.default, "dfs", [98, 98]);
+
+  // <!-- Prim's maze, with DFS solver, root at center -->
+  (0, _maze_generator2.default)("prims", [50, 50], [100, 100], "11", true, _bfs_solver2.default, "dfs", [98, 98]);
+
+  // <!-- DFS maze, with DFS solver, root at center -->
+  (0, _maze_generator2.default)("dfs", [50, 50], [100, 100], "12", true, _bfs_solver2.default, "dfs", [98, 98]);
+
+  // <!-- Prim's maze, BFS Solver, Root at center -->
+  (0, _maze_generator2.default)("prims", [50, 50], [100, 100], "13", true, _bfs_solver2.default, "bfs", [98, 98]);
+
+  // <!-- Prim's maze, BFS Solver, Root and Target near center -->
+  (0, _maze_generator2.default)("prims", [40, 50], [100, 100], "14", true, _bfs_solver2.default, "bfs", [50, 40]);
+
+  // <!-- Prim's maze, DFS Solver, Root and Target near center -->
+  (0, _maze_generator2.default)("prims", [40, 50], [100, 100], "15", true, _bfs_solver2.default, "dfs", [50, 40]);
+
+  // <!-- BFS maze, BFS Solver, Root at corner -->
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "16", true, _bfs_solver2.default, "dfs", [98, 98]);
+
+  // <!-- BFS maze, Dijkstra solver -->
+
+
+  // <!-- BFS maze, A* solver, Root at center -->
+  (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "18", true, _a_star_solver2.default, null, [98, 98]);
+
+  // <!-- Prim's maze, A* solver, Root at center -->
+  (0, _maze_generator2.default)("prims", [50, 50], [100, 100], "19", true, _a_star_solver2.default, null, [98, 98]);
+
+  // <!-- DFS maze, A* solver, Root at center -->
+  (0, _maze_generator2.default)("dfs", [50, 50], [100, 100], "20", true, _a_star_solver2.default, null, [98, 98]);
 });
 
 /***/ }),
@@ -317,7 +312,7 @@ Object.defineProperty(exports, "__esModule", {
 function canvasDraw(node, ctx) {
   var size = 5;
   var distance = node.distance();
-  ctx.fillStyle = "hsl(\n    " + distance * 3 + ",\n    " + (50 + 20 * Math.sin(distance / 6)) + "%,\n    " + (50 + 10 * Math.cos(distance / 12)) + "%)";
+  ctx.fillStyle = "hsl(\n    " + (180 + distance * 3) + ",\n    90%,\n    45%)";
   if (node.type === "wall") ctx.fillStyle = 'white';
   ctx.fillRect(node.x * size, node.y * size, size, size);
 }
@@ -460,184 +455,9 @@ function bfsRandomFlood(root, grid) {
 exports.default = bfsRandomFlood;
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _node = __webpack_require__(0);
-
-var _node2 = _interopRequireDefault(_node);
-
-var _canvas_draw = __webpack_require__(4);
-
-var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function bfsMazeGenerator(root, grid, canvasId) {
-  var canvas = document.getElementById('' + canvasId);
-  var ctx = canvas.getContext("2d");
-  var candidates = [];
-  grid.root = root;
-  candidates.push(grid.array[root[0]][root[1]]);
-
-  var traversalStep = function traversalStep() {
-    if (candidates.length === 0) return;
-
-    var active = candidates.splice(Math.floor(Math.random() * candidates.length), 1)[0];
-    active.type = "path";
-    if (active.parent) {
-      var edge = active.edgeToParent();
-      var edgeNode = grid.array[edge[0]][edge[1]];
-      edgeNode.type = 'path';
-      edgeNode.parent = active.parent;
-      (0, _canvas_draw2.default)(edgeNode, ctx);
-    }
-    var children = active.candNeighbors.filter(function (neighbor) {
-      return grid.isOpenAt(neighbor[0], neighbor[1]);
-    });
-    children.forEach(function (child) {
-      var node = grid.array[child[0]][child[1]];
-      candidates.push(node);
-      node.parent = active;
-      active.children.push(node);
-    });
-    (0, _canvas_draw2.default)(active, ctx);
-    window.setTimeout(traversalStep, 0);
-    // traversalStep();
-  };
-
-  traversalStep();
-}
-
-exports.default = bfsMazeGenerator;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _node = __webpack_require__(0);
-
-var _node2 = _interopRequireDefault(_node);
-
-var _canvas_draw = __webpack_require__(4);
-
-var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function primsMazeGenerator(root, grid, canvasId) {
-  var canvas = document.getElementById('' + canvasId);
-  var ctx = canvas.getContext("2d");
-  var candidates = [];
-  grid.root = root;
-  candidates.push(grid.array[root[0]][root[1]]);
-
-  var traversalStep = function traversalStep() {
-    if (candidates.length === 0) return;
-    candidates.sort(function (a, b) {
-      return b.value - a.value;
-    });
-    var active = candidates.pop();
-    active.type = "path";
-    if (active.parent) {
-      var edge = active.edgeToParent();
-      var edgeNode = grid.array[edge[0]][edge[1]];
-      edgeNode.type = 'path';
-      edgeNode.parent = active.parent;
-      (0, _canvas_draw2.default)(edgeNode, ctx);
-    }
-    var children = active.candNeighbors.filter(function (neighbor) {
-      return grid.isOpenAt(neighbor[0], neighbor[1]);
-    });
-    children.forEach(function (child) {
-      var node = grid.array[child[0]][child[1]];
-      candidates.push(node);
-      node.parent = active;
-      active.children.push(node);
-    });
-    (0, _canvas_draw2.default)(active, ctx);
-    window.setTimeout(traversalStep, 0);
-    // traversalStep();
-  };
-
-  traversalStep();
-}
-
-exports.default = primsMazeGenerator;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _node = __webpack_require__(0);
-
-var _node2 = _interopRequireDefault(_node);
-
-var _canvas_draw = __webpack_require__(4);
-
-var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function dfsMazeGenerator(root, grid, canvasId) {
-  var canvas = document.getElementById('' + canvasId);
-  var ctx = canvas.getContext("2d");
-  var candidates = [];
-  grid.root = root;
-  candidates.push(grid.array[root[0]][root[1]]);
-
-  var traversalStep = function traversalStep() {
-    if (candidates.length === 0) return;
-    var active = candidates.splice(candidates.length - Math.floor(Math.random() * 3 + 1), 1)[0];
-    active.type = "path";
-    if (active.parent) {
-      var edge = active.edgeToParent();
-      var edgeNode = grid.array[edge[0]][edge[1]];
-      edgeNode.type = 'path';
-      edgeNode.parent = active.parent;
-      (0, _canvas_draw2.default)(edgeNode, ctx);
-    }
-    var children = active.candNeighbors.filter(function (neighbor) {
-      return grid.isOpenAt(neighbor[0], neighbor[1]);
-    });
-    children.forEach(function (child) {
-      var node = grid.array[child[0]][child[1]];
-      candidates.push(node);
-      node.parent = active;
-      active.children.push(node);
-    });
-    (0, _canvas_draw2.default)(active, ctx);
-    window.setTimeout(traversalStep, 0);
-    // traversalStep();
-  };
-
-  traversalStep();
-}
-
-exports.default = dfsMazeGenerator;
-
-/***/ }),
+/* 9 */,
+/* 10 */,
+/* 11 */,
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -662,11 +482,8 @@ var _canvas_found_draw2 = _interopRequireDefault(_canvas_found_draw);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function bfsSolver(rootCoords, grid, method, canvasId, target) {
-  // const target = [grid.height - 2, grid.width - 2];
+function bfsSolver(rootCoords, grid, ctx, target, method) {
   var root = rootCoords;
-  var canvas = document.getElementById('' + canvasId);
-  var ctx = canvas.getContext("2d");
   var candidates = [];
   var explored = 0;
   candidates.push(grid.array[root[0]][root[1]]);
@@ -688,7 +505,6 @@ function bfsSolver(rootCoords, grid, method, canvasId, target) {
     }
     if (active.x === target[0] && active.y === target[1]) {
       markPathTo(active, grid, ctx);
-      console.log(explored);
       return;
     }
     active.children.forEach(function (child) {
@@ -807,12 +623,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var aStarSolver = function () {
-  function aStarSolver(rootCoords, grid, canvasId, target) {
+  function aStarSolver(rootCoords, grid, ctx, target) {
     var _this = this;
 
     _classCallCheck(this, aStarSolver);
 
-    this.canvasId = canvasId;
+    this.ctx = ctx;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
     // this.targetCoords = [grid.height - 2, grid.width - 2];
@@ -836,7 +652,7 @@ var aStarSolver = function () {
       // NOTE: using diagonal distance because of generator characteristics
       var dx = Math.abs(current[0] - this.targetCoords[0]);
       var dy = Math.abs(current[1] - this.targetCoords[1]);
-      return Math.pow(dx * dx * dx + dy * dy * dy, 1 / 3);
+      return dx + dy;
     }
   }, {
     key: 'search',
@@ -845,8 +661,7 @@ var aStarSolver = function () {
 
       if (this.candidates.isEmpty()) return -1;
       var active = this.candidates.removeMin();
-      var canvas = document.getElementById('' + this.canvasId);
-      var ctx = canvas.getContext("2d");
+      var ctx = this.ctx;
       if (active.parent) {
         var edge = active.edgeToParent();
         var edgeNode = this.grid.array[edge[0]][edge[1]];
@@ -897,7 +712,11 @@ var aStarSolver = function () {
   return aStarSolver;
 }();
 
-exports.default = aStarSolver;
+var aStar = function aStar(root, grid, ctx, target) {
+  new aStarSolver(root, grid, ctx, target).search();
+};
+
+exports.default = aStar;
 
 /***/ }),
 /* 16 */
@@ -990,7 +809,8 @@ var PriorityQueue = function () {
 exports.default = PriorityQueue;
 
 /***/ }),
-/* 17 */
+/* 17 */,
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1004,49 +824,97 @@ var _node = __webpack_require__(0);
 
 var _node2 = _interopRequireDefault(_node);
 
+var _grid = __webpack_require__(2);
+
+var _grid2 = _interopRequireDefault(_grid);
+
 var _canvas_draw = __webpack_require__(4);
 
 var _canvas_draw2 = _interopRequireDefault(_canvas_draw);
 
+var _canvas_search_draw = __webpack_require__(13);
+
+var _canvas_search_draw2 = _interopRequireDefault(_canvas_search_draw);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function bfsNonMazeGenerator(root, grid, canvasId) {
-  var canvas = document.getElementById('' + canvasId);
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, solver, method, target) {
+  canvas.addEventListener("click", function () {
+    return window.clearInterval(interval);
+  });
+  var grid = new (Function.prototype.bind.apply(_grid2.default, [null].concat(_toConsumableArray(gridDims))))();
+  var drawMethod = color ? _canvas_draw2.default : _canvas_search_draw2.default;
   var ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   var candidates = [];
   grid.root = root;
   candidates.push(grid.array[root[0]][root[1]]);
 
   var traversalStep = function traversalStep() {
-    if (candidates.length === 0) return;
+    if (candidates.length === 0) {
+      window.clearInterval(interval);
+      if (solver) return solver(root, grid, ctx, target, method);
+      return;
+    }
 
-    var active = candidates.shift();
+    var active = void 0;
+    switch (type) {
+      case "bfs":
+        active = candidates.splice(Math.floor(Math.random() * candidates.length), 1)[0];
+        break;
+      case "dfs":
+        active = candidates.splice(candidates.length - Math.floor(Math.random() * 3 + 1), 1)[0];
+        break;
+      case "prims":
+        candidates.sort(function (a, b) {
+          return b.value - a.value;
+        });
+        active = candidates.pop();
+        break;
+      case "bfsNonMaze":
+        active = candidates.shift();
+        break;
+      case "dfsNonMaze":
+        active = candidates.pop();
+        break;
+    }
+
     active.type = "path";
     if (active.parent) {
       var edge = active.edgeToParent();
       var edgeNode = grid.array[edge[0]][edge[1]];
       edgeNode.type = 'path';
       edgeNode.parent = active.parent;
-      (0, _canvas_draw2.default)(edgeNode, ctx);
+      drawMethod(edgeNode, ctx);
     }
+
     var children = active.candNeighbors.filter(function (neighbor) {
       return grid.isOpenAt(neighbor[0], neighbor[1]);
     });
+
     children.forEach(function (child) {
       var node = grid.array[child[0]][child[1]];
       candidates.push(node);
       node.parent = active;
       active.children.push(node);
     });
-    (0, _canvas_draw2.default)(active, ctx);
-    window.setTimeout(traversalStep, 0);
-    // traversalStep();
+
+    drawMethod(active, ctx);
   };
 
-  traversalStep();
-}
+  var interval = window.setInterval(traversalStep, 0);
+};
 
-exports.default = bfsNonMazeGenerator;
+var maze = function maze(type, root, gridDims, canvasId, color, solver, method, target) {
+  var canvas = document.getElementById(canvasId);
+  canvas.addEventListener("click", function () {
+    mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
+  });
+};
+
+exports.default = maze;
 
 /***/ })
 /******/ ]);

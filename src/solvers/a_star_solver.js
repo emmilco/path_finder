@@ -3,8 +3,8 @@ import canvasSearchDraw from '../util/canvas_search_draw';
 import canvasFoundDraw from '../util/canvas_found_draw';
 
 class aStarSolver {
-  constructor(rootCoords, grid, canvasId, target){
-    this.canvasId = canvasId;
+  constructor(rootCoords, grid, ctx, target){
+    this.ctx = ctx;
     this.rootCoords = rootCoords;
     this.rootNode = grid.array[rootCoords[0]][rootCoords[1]];
     // this.targetCoords = [grid.height - 2, grid.width - 2];
@@ -26,14 +26,13 @@ class aStarSolver {
     // NOTE: using diagonal distance because of generator characteristics
     const dx = Math.abs(current[0] - this.targetCoords[0]);
     const dy = Math.abs(current[1] - this.targetCoords[1]);
-    return Math.pow(dx * dx *dx + dy * dy * dy, 1/3);
+    return dx + dy;
   }
 
   search() {
     if (this.candidates.isEmpty()) return -1;
     const active = this.candidates.removeMin();
-    const canvas = document.getElementById(`${this.canvasId}`);
-    const ctx = canvas.getContext("2d");
+    const ctx = this.ctx;
     if (active.parent){
       let edge = active.edgeToParent();
       let edgeNode = this.grid.array[edge[0]][edge[1]];
@@ -75,4 +74,9 @@ class aStarSolver {
   }
 }
 
-export default aStarSolver;
+const aStar = (root, grid, ctx, target) => {
+  new aStarSolver(root, grid, ctx, target).search();
+};
+
+
+export default aStar;
