@@ -20,10 +20,12 @@ JavaScript, Canvas, HTML5, CSS3
 
 ## Overview
 
-Each maze is implemented as a spanning tree consisting of nodes, which represent squares on a rectangular grid.  Each node has a few properties: x and y coordinates, parent, children, value.  Nodes are linked dynamically by each algorithm to create a spanning tree within the limits of the canvas.  
+Each maze is implemented as a spanning tree consisting of nodes which represent squares on a rectangular grid.  Each node has a few properties: x and y coordinates, parent, children, value.  Nodes are linked dynamically by each algorithm to create a spanning tree within the limits of the canvas.  
 
 The various generating algorithms are implemented using a switch within a single generator function, which determines how the active node is chosen out of the pool of candidate nodes.
 
 A\* is implemented as an ES6 class.  Both it and the Prim's generator use a binary min-heap priority queue to reduce the cost of finding the optimal node within the pool of candidates.  
 
-I also built an implementation of Fischer-Yates shuffle, as well as two simple grid-flooding functions, but found them ultimately unnecessary for the project.  [Visit the live site for further explanations!](https://emmilco.github.io/path_finder/)
+I also built an implementation of Fisher-Yates shuffle, as well as two simple grid-flooding functions, but found them ultimately unnecessary for the project.  
+
+[Visit the live site for further explanations!](https://emmilco.github.io/path_finder/)
