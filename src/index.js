@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   maze("bfs", [0,0], [100,100], "16", true, bfsSolver, "dfs", [98,98]);
 
   // BFS maze, Dijkstra solver
-
+  maze("bfs", [0,0], [100,100], "17", true, bfsSolver, "bfs", [98,98]);
 
   // BFS maze, A* solver, Root at center
   maze("bfs", [50,50], [100,100], "18", true, aStar, null, [98,98]);

@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
   (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "16", true, _bfs_solver2.default, "dfs", [98, 98]);
 
   // BFS maze, Dijkstra solver
-
+  (0, _maze_generator2.default)("bfs", [0, 0], [100, 100], "17", true, _bfs_solver2.default, "bfs", [98, 98]);
 
   // BFS maze, A* solver, Root at center
   (0, _maze_generator2.default)("bfs", [50, 50], [100, 100], "18", true, _a_star_solver2.default, null, [98, 98]);
@@ -943,7 +943,7 @@ var maze = function maze(type, root, gridDims, canvasId, color, solver, method, 
     mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
   });
   var scrollHandler = function scrollHandler() {
-    if (canvas.getBoundingClientRect().bottom < window.innerHeight) {
+    if (canvas.getBoundingClientRect().bottom < window.innerHeight && canvas.getBoundingClientRect().top > 0) {
       mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
       document.removeEventListener("scroll", scrollHandler);
     }

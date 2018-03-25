@@ -83,7 +83,8 @@ const maze = (type, root, gridDims, canvasId, color, solver, method, target) => 
     mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
   });
   const scrollHandler = () => {
-    if(canvas.getBoundingClientRect().bottom < window.innerHeight){
+    if(canvas.getBoundingClientRect().bottom < window.innerHeight &&
+        canvas.getBoundingClientRect().top > 0){
       mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
       document.removeEventListener("scroll", scrollHandler);
     }
