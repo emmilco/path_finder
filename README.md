@@ -20,7 +20,7 @@ JavaScript, Canvas, HTML5, CSS3
 
 ## Overview
 
-Each maze is implemented as a spanning tree consisting of nodes, which are represented as squares on a rectangular grid.  Each node has a few properties: x and y coordinates, parent, children, value.  Nodes are linked dynamically by each algorithm to create a spanning tree within the limits of the canvas.  
+Each maze is implemented as a spanning tree consisting of nodes, which represent squares on a rectangular grid.  Each node has a few properties: x and y coordinates, parent, children, value.  Nodes are linked dynamically by each algorithm to create a spanning tree within the limits of the canvas.  
 
 The various generating algorithms are implemented using a switch within a single generator function, which determines how the active node is chosen out of the pool of candidate nodes.
 
