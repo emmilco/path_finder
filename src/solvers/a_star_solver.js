@@ -4,6 +4,7 @@ import canvasFoundDraw from '../util/canvas_found_draw';
 
 class aStarSolver {
   constructor(rootCoords, grid, ctx, target, method){
+    this.interval = null;
     this.method = method;
     this.ctx = ctx;
     this.rootCoords = rootCoords;
@@ -21,6 +22,7 @@ class aStarSolver {
     this.grid = grid;
     this.targetNode = grid.array[target[0]][target[1]];
     this.explored = 0;
+    ctx.canvas.addEventListener("click", () => window.clearInterval(this.interval));
   }
 
   heuristic(current){
@@ -65,7 +67,7 @@ class aStarSolver {
       this.fScore[child.coords] = this.gScore[child.coords] +
         this.heuristic(child.coords);
     });
-    window.setTimeout(() => this.search(), 0);
+    this.interval = window.setTimeout(() => this.search(), 0);
   }
 
   reconstructPath(node, ctx){

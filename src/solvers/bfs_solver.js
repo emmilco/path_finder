@@ -7,6 +7,7 @@ function bfsSolver (rootCoords, grid, ctx, target, method) {
   const targetNode = grid.array[target[0]][target[1]];
   const candidates = [];
   let explored = 0;
+  ctx.canvas.addEventListener("click", () => window.clearInterval(this.interval));
   candidates.push(grid.array[root[0]][root[1]]);
 
   const traversalStep = () => {
@@ -32,7 +33,7 @@ function bfsSolver (rootCoords, grid, ctx, target, method) {
     active.children.forEach((child) => {
       candidates.push(child);
     });
-    window.setTimeout(traversalStep, 0);
+    const interval = window.setTimeout(traversalStep, 0);
   };
   traversalStep();
 }
