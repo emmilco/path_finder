@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   maze("prims", [0,0], [100,100], "27", true, bfsSolver, "dfs", [98,98]);
   maze("prims", [0,0], [100,100], "28", true, bfsSolver, "bfs", [98,98]);
   maze("prims", [0,0], [100,100], "29", true, aStar, null, [98,98]);
+  maze("prims", [0,0], [300,300], "30", true, aStar, null, [298,298]);
 
 
 });
