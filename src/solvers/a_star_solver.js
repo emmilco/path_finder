@@ -53,7 +53,7 @@ class aStarSolver {
       console.log(`a* ${this.explored / this.targetNode.distance()}`);
       return this.reconstructPath(active, ctx);
     }
-    this.result.textContent = `Explored / Path Length = ${(this.explored / this.targetNode.distance()).toFixed(2)}`;
+    this.result.textContent = `Squares Explored / Path Length = ${(this.explored / this.targetNode.distance()).toFixed(2)}`;
 
     this.examined[active.coords] = true;
     active.children.forEach((child) => {

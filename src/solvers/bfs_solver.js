@@ -22,7 +22,7 @@ function bfsSolver (rootCoords, grid, ctx, target, method) {
     } else {
       active = candidates.shift();
     }
-    result.textContent = `Explored / Path Length = ${(explored / targetNode.distance()).toFixed(2)}`;
+    result.textContent = `Squares Explored / Path Length = ${(explored / targetNode.distance()).toFixed(2)}`;
     explored++;
     canvasSearchDraw(active, ctx);
     if (active.parent){

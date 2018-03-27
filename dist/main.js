@@ -762,7 +762,7 @@ function bfsSolver(rootCoords, grid, ctx, target, method) {
     } else {
       active = candidates.shift();
     }
-    result.textContent = 'Explored / Path Length = ' + (explored / targetNode.distance()).toFixed(2);
+    result.textContent = 'Squares Explored / Path Length = ' + (explored / targetNode.distance()).toFixed(2);
     explored++;
     (0, _canvas_search_draw2.default)(active, ctx);
     if (active.parent) {
@@ -889,7 +889,7 @@ var aStarSolver = function () {
         console.log('a* ' + this.explored / this.targetNode.distance());
         return this.reconstructPath(active, ctx);
       }
-      this.result.textContent = 'Explored / Path Length = ' + (this.explored / this.targetNode.distance()).toFixed(2);
+      this.result.textContent = 'Squares Explored / Path Length = ' + (this.explored / this.targetNode.distance()).toFixed(2);
 
       this.examined[active.coords] = true;
       active.children.forEach(function (child) {

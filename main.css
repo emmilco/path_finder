@@ -101,6 +101,9 @@ p {
   font-style: italic;
   font-size: 12px;
   width: auto;
+  animation: fadeInDown .5s linear;
+  padding: 10px 0;
+  margin: 0;
 }
 
 .final-recap {
@@ -114,4 +117,9 @@ p {
 
 .final-recap canvas {
   width: 100%;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; padding: 0;}
+  to { opacity: 1; }
 }
