@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
   maze("prims", [0,0], [100,100], "0", true, aStar, null, [98,98]);
   document.dispatchEvent(new Event("scroll"));
   // Prims headliner-maze, color, A* solver
-  maze("bfsNonMaze", [0,0], [100,100], "1", false);
 
   // BFS non-maze, B&W
   maze("bfsNonMaze", [0,0], [100,100], "1", false);

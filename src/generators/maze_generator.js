@@ -9,9 +9,13 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
   const grid = new Grid(...gridDims);
   const drawMethod = (color ? canvasDraw : canvasSearchDraw);
   const ctx = canvas.getContext("2d");
+  const result = document.createElement("p");
+  result.className = "caption";
+  ctx.canvas.parentNode.appendChild(result);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   let maxDepth = 0;
   grid.root = root;
+  
   let candidates;
   if (type === "prims") {
     candidates = new PriorityQueue((a,b) => b.value - a.value);
@@ -22,11 +26,6 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
 
   const traversalStep = () => {
     if (candidates.length === 0) {
-      const result = document.createElement("p");
-      result.className = "caption";
-      const text = document.createTextNode(`maximum maze depth = ${maxDepth}`);
-      result.appendChild(text);
-      ctx.canvas.parentNode.appendChild(result);
       console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);
@@ -53,7 +52,7 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
       active = candidates.pop();
       break;
     }
-
+    result.textContent = `Max Depth = ${maxDepth}`;
     active.type = "path";
     const distance = active.distance();
     if (distance > maxDepth) maxDepth = distance;

@@ -302,7 +302,6 @@ document.addEventListener("DOMContentLoaded", function () {
   (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "0", true, _a_star_solver2.default, null, [98, 98]);
   document.dispatchEvent(new Event("scroll"));
   // Prims headliner-maze, color, A* solver
-  (0, _maze_generator2.default)("bfsNonMaze", [0, 0], [100, 100], "1", false);
 
   // BFS non-maze, B&W
   (0, _maze_generator2.default)("bfsNonMaze", [0, 0], [100, 100], "1", false);
@@ -543,9 +542,13 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
   var grid = new (Function.prototype.bind.apply(_grid2.default, [null].concat(_toConsumableArray(gridDims))))();
   var drawMethod = color ? _canvas_draw2.default : _canvas_search_draw2.default;
   var ctx = canvas.getContext("2d");
+  var result = document.createElement("p");
+  result.className = "caption";
+  ctx.canvas.parentNode.appendChild(result);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   var maxDepth = 0;
   grid.root = root;
+
   var candidates = void 0;
   if (type === "prims") {
     candidates = new _priority_queue2.default(function (a, b) {
@@ -558,11 +561,6 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) {
-      var result = document.createElement("p");
-      result.className = "caption";
-      var text = document.createTextNode('maximum maze depth = ' + maxDepth);
-      result.appendChild(text);
-      ctx.canvas.parentNode.appendChild(result);
       console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);
@@ -585,7 +583,7 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
         active = candidates.pop();
         break;
     }
-
+    result.textContent = 'Max Depth = ' + maxDepth;
     active.type = "path";
     var distance = active.distance();
     if (distance > maxDepth) maxDepth = distance;
@@ -743,14 +741,16 @@ var _canvas_found_draw2 = _interopRequireDefault(_canvas_found_draw);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function bfsSolver(rootCoords, grid, ctx, target, method) {
-  var _this = this;
-
   var root = rootCoords;
   var targetNode = grid.array[target[0]][target[1]];
   var candidates = [];
   var explored = 0;
+  var result = document.createElement("p");
+  result.className = "caption";
+  ctx.canvas.parentNode.appendChild(result);
+  var interval = void 0;
   ctx.canvas.addEventListener("click", function () {
-    return window.clearInterval(_this.interval);
+    return window.clearInterval(interval);
   });
   candidates.push(grid.array[root[0]][root[1]]);
 
@@ -762,6 +762,7 @@ function bfsSolver(rootCoords, grid, ctx, target, method) {
     } else {
       active = candidates.shift();
     }
+    result.textContent = 'Explored / Path Length = ' + (explored / targetNode.distance()).toFixed(2);
     explored++;
     (0, _canvas_search_draw2.default)(active, ctx);
     if (active.parent) {
@@ -771,18 +772,13 @@ function bfsSolver(rootCoords, grid, ctx, target, method) {
     }
     if (active.x === target[0] && active.y === target[1]) {
       console.log(method + ' ' + explored / targetNode.distance());
-      var result = document.createElement("p");
-      result.className = "caption";
-      var text = document.createTextNode('Squares explored / path-length = ' + (explored / targetNode.distance()).toFixed(2));
-      result.appendChild(text);
-      ctx.canvas.parentNode.appendChild(result);
       markPathTo(active, grid, ctx);
       return;
     }
     active.children.forEach(function (child) {
       candidates.push(child);
     });
-    var interval = window.setTimeout(traversalStep, 0);
+    interval = window.setTimeout(traversalStep, 0);
   };
   traversalStep();
 }
@@ -856,6 +852,9 @@ var aStarSolver = function () {
     this.grid = grid;
     this.targetNode = grid.array[target[0]][target[1]];
     this.explored = 0;
+    this.result = document.createElement("p");
+    this.result.className = "caption";
+    this.ctx.canvas.parentNode.appendChild(this.result);
     ctx.canvas.addEventListener("click", function () {
       return window.clearInterval(_this.interval);
     });
@@ -887,14 +886,11 @@ var aStarSolver = function () {
       (0, _canvas_search_draw2.default)(active, ctx);
 
       if (active.coords.toString() === this.targetCoords.toString()) {
-        var result = document.createElement("p");
-        result.className = "caption";
-        var text = document.createTextNode('Squares explored / path-length = ' + (this.explored / this.targetNode.distance()).toFixed(2));
-        result.appendChild(text);
-        this.ctx.canvas.parentNode.appendChild(result);
         console.log('a* ' + this.explored / this.targetNode.distance());
         return this.reconstructPath(active, ctx);
       }
+      this.result.textContent = 'Explored / Path Length = ' + (this.explored / this.targetNode.distance()).toFixed(2);
+
       this.examined[active.coords] = true;
       active.children.forEach(function (child) {
         if (!_this2.examined[child.coords]) {

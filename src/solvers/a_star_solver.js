@@ -22,6 +22,9 @@ class aStarSolver {
     this.grid = grid;
     this.targetNode = grid.array[target[0]][target[1]];
     this.explored = 0;
+    this.result = document.createElement("p");
+    this.result.className = "caption";
+    this.ctx.canvas.parentNode.appendChild(this.result);
     ctx.canvas.addEventListener("click", () => window.clearInterval(this.interval));
   }
 
@@ -47,14 +50,11 @@ class aStarSolver {
     canvasSearchDraw(active, ctx);
 
     if (active.coords.toString() === this.targetCoords.toString()) {
-      const result = document.createElement("p");
-      result.className = "caption";
-      const text = document.createTextNode(`Squares explored / path-length = ${(this.explored / this.targetNode.distance()).toFixed(2)}`);
-      result.appendChild(text);
-      this.ctx.canvas.parentNode.appendChild(result);
       console.log(`a* ${this.explored / this.targetNode.distance()}`);
       return this.reconstructPath(active, ctx);
     }
+    this.result.textContent = `Explored / Path Length = ${(this.explored / this.targetNode.distance()).toFixed(2)}`;
+
     this.examined[active.coords] = true;
     active.children.forEach((child) => {
       if(!this.examined[child.coords]){
