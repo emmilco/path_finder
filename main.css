@@ -1,3 +1,25 @@
+#github {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  display: flex;
+  align-items: center;
+}
+
+#github > * {
+  margin-right: 30px;
+  text-transform: uppercase;
+  color: #6a9ae8;
+  font-weight: bolder;
+  letter-spacing: 2px;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+#github *:hover {
+  text-decoration: underline;
+}
+
 canvas {
   width: 45%;
   padding: 5px;
