@@ -47,6 +47,11 @@ class aStarSolver {
     canvasSearchDraw(active, ctx);
 
     if (active.coords.toString() === this.targetCoords.toString()) {
+      const result = document.createElement("p");
+      result.className = "caption";
+      const text = document.createTextNode(`Squares explored / path-length = ${(this.explored / this.targetNode.distance()).toFixed(2)}`);
+      result.appendChild(text);
+      this.ctx.canvas.parentNode.appendChild(result);
       console.log(`a* ${this.explored / this.targetNode.distance()}`);
       return this.reconstructPath(active, ctx);
     }

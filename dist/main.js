@@ -558,6 +558,11 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) {
+      var result = document.createElement("p");
+      result.className = "caption";
+      var text = document.createTextNode('maximum maze depth = ' + maxDepth);
+      result.appendChild(text);
+      ctx.canvas.parentNode.appendChild(result);
       console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);
@@ -766,6 +771,11 @@ function bfsSolver(rootCoords, grid, ctx, target, method) {
     }
     if (active.x === target[0] && active.y === target[1]) {
       console.log(method + ' ' + explored / targetNode.distance());
+      var result = document.createElement("p");
+      result.className = "caption";
+      var text = document.createTextNode('Squares explored / path-length = ' + (explored / targetNode.distance()).toFixed(2));
+      result.appendChild(text);
+      ctx.canvas.parentNode.appendChild(result);
       markPathTo(active, grid, ctx);
       return;
     }
@@ -877,6 +887,11 @@ var aStarSolver = function () {
       (0, _canvas_search_draw2.default)(active, ctx);
 
       if (active.coords.toString() === this.targetCoords.toString()) {
+        var result = document.createElement("p");
+        result.className = "caption";
+        var text = document.createTextNode('Squares explored / path-length = ' + (this.explored / this.targetNode.distance()).toFixed(2));
+        result.appendChild(text);
+        this.ctx.canvas.parentNode.appendChild(result);
         console.log('a* ' + this.explored / this.targetNode.distance());
         return this.reconstructPath(active, ctx);
       }

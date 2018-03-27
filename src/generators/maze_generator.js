@@ -22,6 +22,11 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
 
   const traversalStep = () => {
     if (candidates.length === 0) {
+      const result = document.createElement("p");
+      result.className = "caption";
+      const text = document.createTextNode(`maximum maze depth = ${maxDepth}`);
+      result.appendChild(text);
+      ctx.canvas.parentNode.appendChild(result);
       console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);

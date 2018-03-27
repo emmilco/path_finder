@@ -27,6 +27,11 @@ function bfsSolver (rootCoords, grid, ctx, target, method) {
     }
     if (active.x === target[0] && active.y === target[1]) {
       console.log(`${method} ${explored / targetNode.distance()}`);
+      const result = document.createElement("p");
+      result.className = "caption";
+      const text = document.createTextNode(`Squares explored / path-length = ${(explored / targetNode.distance()).toFixed(2)}`);
+      result.appendChild(text);
+      ctx.canvas.parentNode.appendChild(result);
       markPathTo(active, grid, ctx);
       return;
     }
