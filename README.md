@@ -2,7 +2,7 @@
 
 ![Gif of maze generation](./maze.gif)
 
-Pathfinder is a single-page demo of a few major maze-generation and pathfinding algorithms.  It is built completely in vanilla JavaScript (ES6), using HTML5 canvas elements in order to render the mazes.
+Pathfinder is an interactive demonstration of a few major maze-generation and pathfinding algorithms.  It is built completely in vanilla JavaScript (ES6), using HTML5 canvas elements in order to render the mazes.
 
 [Live version.](https://emmilco.github.io/path_finder/)
 
