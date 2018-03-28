@@ -26,7 +26,7 @@ Each maze is implemented as a spanning tree consisting of nodes which represent 
 The various generating algorithms are implemented using a switch within a single generator function, which determines how the active node is chosen out of the pool of candidate nodes.
 
 ``` js
-// generators/maze_generators.js
+// generators/maze_generator.js
 
 let active;
 switch (type) {
