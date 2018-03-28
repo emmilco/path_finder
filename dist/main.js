@@ -616,6 +616,7 @@ var maze = function maze(type, root, gridDims, canvasId, color, solver, method, 
   var canvas = document.getElementById(canvasId);
   canvas.addEventListener("click", function () {
     mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
+    document.removeEventListener("scroll", scrollHandler);
   });
   var scrollHandler = function scrollHandler() {
     if (canvas.getBoundingClientRect().bottom < window.innerHeight && canvas.getBoundingClientRect().top > 0) {

@@ -15,7 +15,7 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   let maxDepth = 0;
   grid.root = root;
-  
+
   let candidates;
   if (type === "prims") {
     candidates = new PriorityQueue((a,b) => b.value - a.value);
@@ -85,6 +85,7 @@ const maze = (type, root, gridDims, canvasId, color, solver, method, target) => 
   const canvas = document.getElementById(canvasId);
   canvas.addEventListener("click", () => {
     mazeGenerator(type, root, gridDims, canvas, color, solver, method, target);
+    document.removeEventListener("scroll", scrollHandler);
   });
   const scrollHandler = () => {
     if(canvas.getBoundingClientRect().bottom < window.innerHeight &&
