@@ -16,7 +16,7 @@ JavaScript, Canvas, HTML5, CSS3
 - DFS
 - Prim's Algorithm
 - Dijkstra's Algorithm
-- Binary MinHeap Priority Queue
+- MinHeap Priority Queue
 - Directed graphs
 
 ## Overview
