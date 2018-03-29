@@ -17,9 +17,12 @@
     "url": "https://github.com/emmilco/path_finder/issues"
   },
   "homepage": "https://github.com/emmilco/path_finder#readme",
+  "devDependencies": {
+    "webpack": "^3.11.0"
+  },
   "dependencies": {
-    "d3": "^4.13.0",
-    "webpack": "^3.11.0",
-    "webpack-cli": "^2.0.12"
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1"
   }
 }
