@@ -50,7 +50,6 @@ class aStarSolver {
     canvasSearchDraw(active, ctx);
 
     if (active.coords.toString() === this.targetCoords.toString()) {
-      console.log(`a* ${this.explored / this.targetNode.distance()}`);
       return this.reconstructPath(active, ctx);
     }
     this.result.textContent = `Squares Explored / Path Length = ${(this.explored / this.targetNode.distance()).toFixed(2)}`;

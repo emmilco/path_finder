@@ -26,7 +26,6 @@ const mazeGenerator = (type, root, gridDims, canvas, color, solver, method, targ
 
   const traversalStep = () => {
     if (candidates.length === 0) {
-      console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);
       return;

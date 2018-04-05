@@ -31,7 +31,6 @@ function bfsSolver (rootCoords, grid, ctx, target, method) {
       canvasSearchDraw(edgeNode, ctx);
     }
     if (active.x === target[0] && active.y === target[1]) {
-      console.log(`${method} ${explored / targetNode.distance()}`);
       markPathTo(active, grid, ctx);
       return;
     }

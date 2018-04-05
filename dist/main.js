@@ -376,6 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
   (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "28", true, _bfs_solver2.default, "bfs", [98, 98]);
   (0, _maze_generator2.default)("prims", [0, 0], [100, 100], "29", true, _a_star_solver2.default, null, [98, 98]);
   (0, _maze_generator2.default)("prims", [0, 0], [300, 300], "30", true, _a_star_solver2.default, null, [298, 298]);
+  (0, _maze_generator2.default)("prims", [0, 0], [300, 300], "31", true, _bfs_solver2.default, "dfs", [298, 298]);
 });
 
 /***/ }),
@@ -561,7 +562,6 @@ var mazeGenerator = function mazeGenerator(type, root, gridDims, canvas, color, 
 
   var traversalStep = function traversalStep() {
     if (candidates.length === 0) {
-      console.log(maxDepth);
       window.clearInterval(interval);
       if (solver) return solver(root, grid, ctx, target, method);
       return;
@@ -772,7 +772,6 @@ function bfsSolver(rootCoords, grid, ctx, target, method) {
       (0, _canvas_search_draw2.default)(edgeNode, ctx);
     }
     if (active.x === target[0] && active.y === target[1]) {
-      console.log(method + ' ' + explored / targetNode.distance());
       markPathTo(active, grid, ctx);
       return;
     }
@@ -887,7 +886,6 @@ var aStarSolver = function () {
       (0, _canvas_search_draw2.default)(active, ctx);
 
       if (active.coords.toString() === this.targetCoords.toString()) {
-        console.log('a* ' + this.explored / this.targetNode.distance());
         return this.reconstructPath(active, ctx);
       }
       this.result.textContent = 'Squares Explored / Path Length = ' + (this.explored / this.targetNode.distance()).toFixed(2);
